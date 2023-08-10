@@ -22,3 +22,11 @@ source .venv/bin/activate
 Install the dependencies:
 ```bash
 pip install -r requirements.txt
+```
+
+## Running Tests
+
+Tests can be run from the repository root by invoking `pytest`:
+```bash
+pytest
+```
