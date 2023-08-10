@@ -5,7 +5,9 @@ Python bindings for the Hyprland wayland compositor.
 ## Installation
 
 **Dependencies**:
-- *Python 3.7* or newer
+- Python 3.10
+- [pydantic 2.1](https://docs.pydantic.dev/2.1/)
+
 
 
 ## Development
