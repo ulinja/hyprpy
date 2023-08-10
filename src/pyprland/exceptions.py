@@ -6,5 +6,5 @@ class NonZeroStatusException(Exception):
     pass
 
 
-class ParseError(Exception):
-    """Raised when a parsing attempt is unsuccessful."""
+class EnvironmentException(Exception):
+    """Raised when an expected environment variable could not be found."""
