@@ -7,9 +7,15 @@ Classes:
     Workspace: Represents a workspace, and contains all available information about the workspace.
 """
 
+from typing import List
+
 from pydantic import BaseModel, Field
 
 from pyprland.validators.common import HexString
+from pyprland.models.monitor import Monitor
+from pyprland.models.window import Window
+from pyprland.hyprland import Hyprland
+from pyprland.exceptions import ParentNotFoundException
 
 
 class Workspace(BaseModel):
@@ -33,6 +39,33 @@ class Workspace(BaseModel):
     last_window_title: str = Field(..., alias="lastwindowtitle")
     window_count: int = Field(..., alias="windows")
     has_fullscreen: bool = Field(..., alias="hasfullscreen")
+
+
+    @property
+    def monitor(self) -> Monitor:
+        """Returns the :class:`pyprland.models.monitor.Monitor` which this workspace is on.
+
+        :return: The :class:`pyprland.models.monitor.Monitor` this workspace is on.
+        """
+
+        monitor = Hyprland.get_monitor_by_name(self.monitor_name)
+        if not monitor:
+            raise ParentNotFoundException(f"Parent monitor {self.monitor_name=!r} not found.")
+        return monitor
+
+
+    @property
+    def windows(self) -> List[Window]:
+        """Returns all :class:`pyprland.models.window.Window`s on this workspace.
+
+        :return: A list containing all :class:`pyprland.models.window.Window`s on this workspace.
+        """
+
+        windows = []
+        for window in Hyprland.get_windows():
+            if window.workspace_id == self.id:
+                windows.append(window)
+        return windows
 
 
     @property

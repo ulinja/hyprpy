@@ -11,6 +11,9 @@ from typing import List
 
 from pydantic import AliasPath, BaseModel, Field
 
+from pyprland.models.workspace import Workspace
+from pyprland.hyprland import Hyprland
+
 
 class Monitor(BaseModel):
     """Represents a Monitor in the Hyprland wayland compositor.
@@ -57,6 +60,20 @@ class Monitor(BaseModel):
     is_focused: bool = Field(..., alias="focused")
     uses_dpms: bool = Field(..., alias="dpmsStatus")
     vrr: bool
+
+
+    @property
+    def workspaces(self) -> List[Workspace]:
+        """Returns all :class:`pyprland.models.workspace.Workspace`s on this monitor.
+
+        :return: A list containing all :class:`pyprland.models.workspace.Workspace`s on this monitor.
+        """
+
+        workspaces = []
+        for workspace in Hyprland.get_workspaces():
+            if workspace.monitor_name == self.name:
+                workspaces.append(workspace)
+        return workspaces
 
 
     def __repr__(self):

@@ -13,6 +13,9 @@ Classes:
 from pydantic import BaseModel, Field, AliasPath
 
 from pyprland.validators.common import HexString
+from pyprland.models.workspace import Workspace
+from pyprland.hyprland import Hyprland
+from pyprland.exceptions import ParentNotFoundException
 
 
 class Window(BaseModel):
@@ -52,7 +55,7 @@ class Window(BaseModel):
     width: int = Field(..., validation_alias=AliasPath("size", 0))
     height: int = Field(..., validation_alias=AliasPath("size", 1))
     workspace_id: int = Field(..., validation_alias=AliasPath("workspace", "id"))
-    workspace_name: int = Field(..., validation_alias=AliasPath("workspace", "name"))
+    workspace_name: str = Field(..., validation_alias=AliasPath("workspace", "name"))
     is_floating: bool = Field(..., alias="floating")
     monitor_id: int = Field(..., alias="monitor")
     wm_class: str = Field(..., alias="class")
@@ -66,11 +69,26 @@ class Window(BaseModel):
     fullscreen_mode: int = Field(..., alias="fullscreenMode")
     is_fake_fullscreen: bool = Field(..., alias="fakeFullscreen")
 
+    
+    @property
+    def workspace(self) -> Workspace:
+        """Returns the :class:`pyprland.models.workspace.Workspace` which this window is in.
+
+        :return: The :class:`pyprland.models.workspace.Workspace` this window is on.
+        """
+
+        workspace = Hyprland.get_workspace_by_id(self.workspace_id)
+        if not workspace:
+            raise ParentNotFoundException(f"Parent workspace {self.workspace_id=} not found.")
+        return workspace
+
+
     @property
     def address_as_int(self) -> int:
         """Returns the integer representation of the window's `address` property."""
 
         return int(self.address, 16)
+
 
     def __repr__(self):
         max_title_length = 24
