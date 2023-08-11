@@ -1,1 +1,1 @@
-from .hyprland import Hyprland
+from .components.instances import Instance as Hyprland

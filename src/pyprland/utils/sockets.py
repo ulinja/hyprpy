@@ -12,6 +12,11 @@ from pyprland.utils import assertions
 log = logging.getLogger(__name__)
 
 
+class SocketError(Exception):
+    """Raised when a socket operation fails."""
+    pass
+
+
 class AbstractSocket(ABC):
 
     def __init__(self, signature: str):
@@ -43,7 +48,7 @@ class CommandSocket(AbstractSocket):
         self.path_to_socket = path_to_socket
 
 
-    def send_command(self, command: str, args: List[str] = [], flags: List[str] = []) -> str | None:
+    def send_command(self, command: str, flags: List[str] = [], args: List[str] = []) -> str:
         assertions.assert_is_nonempty_string(command)
         for token in args + flags:
             assertions.assert_is_nonempty_string(token)
@@ -58,5 +63,6 @@ class CommandSocket(AbstractSocket):
                 s.connect(str(self.path_to_socket))
                 s.sendall(message.encode('ascii'))
                 return s.recv(4096).decode('ascii')
-            except TimeoutError:
-                log.error("Failed to send command: socket connection timeout.")
+            except TimeoutError as e:
+                log.error(f"Failed to send command: {command=!r} {flags=} {args=}")
+                raise SocketError(f"Socket timed out: {e}")

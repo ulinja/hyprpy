@@ -6,10 +6,17 @@ from typing import Tuple
 import subprocess
 
 import pyprland.utils.assertions as assertions
-from pyprland.exceptions import EnvironmentException, NonZeroStatusException
 
 
 log = logging.getLogger(__name__)
+
+
+class NonZeroStatusException(Exception):
+    """Raised when a shell invocation returns a non-zero exit status."""
+    pass
+
+class EnvironmentException(Exception):
+    """Raised when an expected environment variable could not be found."""
 
 
 def run_or_fail(command: list[str]) -> Tuple[str, str]:
