@@ -1,4 +1,97 @@
-"""Interfaces for hyprland."""
+"""
+hyprland
+========
+
+This module provides the `Hyprland` class, which serves as the primary interface 
+to interact with the Hyprland environment. It offers methods to fetch various entities 
+like `Instance`, `Window`, `Workspace`, and `Monitor`.
+
+The entities store information about themselves in their attributes.
+For more information, take a peek at the :module:`pyprland.models` module.
+
+Usage Examples
+--------------
+
+1. Fetch all windows:
+
+.. code-block:: python
+
+    from pyprland import Hyprland
+
+    windows = Hyprland.get_windows()
+    for window in windows:
+        print(window.wm_class)
+
+4. Retrieve all workspaces:
+
+.. code-block:: python
+
+    workspaces = Hyprland.get_workspaces()
+    for workspace in workspaces:
+        print(workspace)
+
+4. Get all managed monitors:
+
+.. code-block:: python
+
+    monitors = Hyprland.get_monitors()
+    for monitor in monitors:
+        print(monitor)
+
+3. Get all windows currently on the special workspace
+
+.. code-block:: python
+
+    special_workspace = Hyprland.get_workspace_by_name("special")
+    # alternatively: special_workspace = Hyprland.get_workspace_by_id(-99)
+
+    if special_workspace is not None:
+        special_windows = special_workspace.windows
+        for window in special_windows:
+            print(window.title)
+
+5. Check whether workspace number 5 currently exists
+
+.. code-block:: python
+
+    workspace = Hyprland.get_workspace_by_id(5)
+    if workspace:
+        return true
+
+7. Get the resolution of the first monitor
+
+.. code-block:: python
+
+    monitor = Hyprland.get_monitor_by_id(0)
+    if monitor:
+        print(f"{monitor.width} x {monitor.height}")
+
+Main Methods
+------------
+
+- :meth:`Hyprland.get_instance`
+- :meth:`Hyprland.get_windows`
+- :meth:`Hyprland.get_window_by_address`
+- :meth:`Hyprland.get_workspaces`
+- :meth:`Hyprland.get_workspace_by_id`
+- :meth:`Hyprland.get_workspace_by_name`
+- :meth:`Hyprland.get_monitors`
+- :meth:`Hyprland.get_monitor_by_id`
+- :meth:`Hyprland.get_monitor_by_name`
+
+For the following classes and their attributes, refer to the :module:`pyprland.models` module:
+- :class:`pyprland.models.Instance`: describes the Hyprland instance
+- :class:`pyprland.models.Window`: describes a Window (a.k.a. client)
+- :class:`pyprland.models.Workspace`: describes a Workspace
+- :class:`pyprland.models.Monitor`: describes a Monitor
+
+Exceptions:
+    Various exceptions might be raised based on context, including:
+    - :class:`pyprland.exceptions.EnvironmentException`: if you invoke this library outside of a Hyprland environment.
+    - :class:`pyprland.exceptions.NonZeroStatusException`: if the `hyprctl` command fails for some reason.
+    - :class:`TypeError`
+    - :class:`ValueError`
+"""
 
 from typing import List
 import json
