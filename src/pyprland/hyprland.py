@@ -4,10 +4,7 @@ from typing import List
 import json
 
 from pyprland.utils import shell, assertions
-from pyprland.models.instance import Instance
-from pyprland.models.monitor import Monitor
-from pyprland.models.workspace import Workspace
-from pyprland.models.window import Window
+from pyprland.models import Instance, Monitor, Workspace, Window
 
 
 class Hyprland:
@@ -72,6 +69,19 @@ class Hyprland:
         assertions.assert_is_int(id)
         for workspace in cls.get_workspaces():
             if workspace.id == id:
+                return workspace
+
+    @classmethod
+    def get_workspace_by_name(cls, name: int) -> Workspace | None:
+        """Retrieves the :class:`pyprland.models.workspace.Workspace` with the specified :param:`name`.
+
+        :return: The :class:`pyprland.models.workspace.Workspace` if it exists, or `None` otherwise.
+        :raises :class:`TypeError`: If :param:`name` is not a string.
+        """
+
+        assertions.assert_is_string(name)
+        for workspace in cls.get_workspaces():
+            if workspace.name == name:
                 return workspace
 
     
