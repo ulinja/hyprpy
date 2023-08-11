@@ -50,7 +50,7 @@ from typing import List
 
 from pydantic import BaseModel, Field, AliasPath
 
-from pyprland.utils import shell
+from pyprland.utils import shell, sockets
 from pyprland.validators.common import HexString, NonEmptyString
 from pyprland.exceptions import ParentNotFoundException
 
@@ -273,6 +273,14 @@ class Instance(BaseModel):
     """
 
     signature: NonEmptyString
+    _event_socket: sockets.EventSocket
+    _command_socket: sockets.CommandSocket
+
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self._event_socket = sockets.EventSocket(self.signature)
+        self._command_socket = sockets.CommandSocket(self.signature)
 
 
     def __repr__(self):
