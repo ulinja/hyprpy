@@ -1,10 +1,16 @@
-import json, os
+"""Unit tests for the :class:`pyprland.models.Window` class.
 
-import pytest
+WARNING
+=======
+These tests are obsolete. I will replace them in the future.
+"""
 
 from pathlib import Path
-from pyprland import windows
-from pyprland.exceptions import ParseError
+
+import pytest
+from pydantic import ValidationError
+
+from pyprland.models import Window
 
 
 path_to_testdata = Path(__file__).absolute().parent / 'testdata' / 'windows.json'
@@ -17,7 +23,7 @@ def data_valid() -> str:
 
 
 def test_valid_from_json(data_valid):
-    result = windows.Window._from_json(data_valid)
+    result = Window.model_validate_json(data_valid)
     assert len(result) == 6
     assert isinstance(result[0], windows.Window)
     assert result[0].address == "0x325eca0"
