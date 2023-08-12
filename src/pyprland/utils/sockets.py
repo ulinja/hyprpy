@@ -26,7 +26,7 @@ class AbstractSocket(ABC):
 
 class EventSocket(AbstractSocket):
 
-    conncection_timeout_seconds: float = 0.5
+    conncection_timeout_seconds: float = 1.0
 
     def __init__(self, signature: str):
         super().__init__(signature)
@@ -36,9 +36,21 @@ class EventSocket(AbstractSocket):
         self.path_to_socket = path_to_socket
 
 
+    def get_socket(self):
+        s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        s.settimeout(self.conncection_timeout_seconds)
+        try:
+            s.connect(str(self.path_to_socket))
+            s.settimeout(None)
+            return s
+        except TimeoutError as e:
+            log.error(f"Failed to connect to event socket.")
+            raise SocketError(f"Socket timed out: {e}")
+
+
 class CommandSocket(AbstractSocket):
 
-    conncection_timeout_seconds: float = 0.5
+    conncection_timeout_seconds: float = 1.0
 
     def __init__(self, signature: str):
         super().__init__(signature)
@@ -61,8 +73,8 @@ class CommandSocket(AbstractSocket):
             s.settimeout(self.conncection_timeout_seconds)
             try:
                 s.connect(str(self.path_to_socket))
-                s.sendall(message.encode('ascii'))
-                return s.recv(4096).decode('ascii')
+                s.sendall(message.encode('utf-8'))
+                return s.recv(4096).decode('utf-8')
             except TimeoutError as e:
                 log.error(f"Failed to send command: {command=!r} {flags=} {args=}")
                 raise SocketError(f"Socket timed out: {e}")

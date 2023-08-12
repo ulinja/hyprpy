@@ -1,23 +1,39 @@
 from typing import Dict, List, Type, Union
 import json
+import logging
 
 from pyprland.data.models import InstanceData
 from pyprland.components import windows, workspaces, monitors
-from pyprland.utils import assertions, shell, sockets
+from pyprland.utils import assertions, shell, sockets, signals
+
+
+log = logging.getLogger(__name__)
 
 
 class Instance:
 
     def __init__(self, signature: str = shell.get_env_var_or_fail('HYPRLAND_INSTANCE_SIGNATURE')):
         self._data = InstanceData(signature=signature)
+
         self.event_socket = sockets.EventSocket(signature)
         self.command_socket = sockets.CommandSocket(signature)
 
+        self.signal_workspace_created = signals.Signal(self)
+        self.signal_workspace_destroyed = signals.Signal(self)
+        self.signal_active_workspace_changed = signals.Signal(self)
+
+        self.signal_window_created = signals.Signal(self)
+        self.signal_window_destroyed = signals.Signal(self)
+        self.signal_active_window_changed = signals.Signal(self)
+
+
     def __getattr__(self, name):
-        if name == 'event_socket':
-            return self.event_socket
-        elif name == 'command_socket':
-            return self.command_socket
+        if name in [
+            'event_socket', 'command_socket',
+            'signal_workspace_created', 'signal_workspace_destroyed', 'signal_active_workspace_changed'
+            'signal_window_created', 'signal_window_destroyed', 'signal_active_window_changed'
+        ]:
+            return getattr(self, name)
         else:
             return getattr(self._data, name)
 
@@ -120,3 +136,50 @@ class Instance:
         for monitor in self.get_monitors():
             if monitor.name == name:
                 return monitor
+
+
+    def watch(self) -> None:
+
+        def _handle_socket_data(data: str):
+            signal_for_event = {
+                'openwindow': self.signal_window_created,
+                'closewindow': self.signal_window_destroyed,
+                'activewindowv2': self.signal_active_window_changed,
+
+                'createworkspace': self.signal_workspace_created,
+                'destroyworkspace': self.signal_workspace_destroyed,
+                'workspace': self.signal_active_workspace_changed,
+            }
+
+            lines = list(filter(lambda line: len(line) > 0, data.split('\n')))
+            for line in lines:
+                event_name, event_data = line.split('>>', maxsplit=1)
+
+                if event_name not in signal_for_event:
+                    continue
+                signal = signal_for_event[event_name]
+                if not signal._observers:
+                    continue
+
+                if event_name == 'openwindow':
+                    new_window = self.get_window_by_address(event_data.split(',')[0])
+                    signal.emit(new_window=new_window)
+                elif event_name == 'closewindow':
+                    signal.emit(destroyed_window_address=event_data)
+                elif event_name == 'activewindowv2':
+                    active_window = None if event_data == ',' else self.get_window_by_address(event_data)
+                    signal.emit(active_window=active_window)
+
+                elif event_name == 'createworkspace':
+                    new_workspace = self.get_workspace_by_id(int(event_data))
+                    signal.emit(new_workspace=new_workspace)
+                elif event_name == 'destroyworkspace':
+                    signal.emit(destroyed_workspace_id=event_data)
+                elif event_name == 'workspace':
+                    active_workspace = self.get_workspace_by_id(int(event_data))
+                    signal.emit(active_workspace=active_workspace)
+
+        with self.event_socket.get_socket() as s:
+            while True:
+                data = s.recv(4096).decode('utf-8')
+                _handle_socket_data(data)
