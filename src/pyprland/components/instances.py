@@ -28,6 +28,11 @@ class Instance:
 
 
     def __getattr__(self, name):
+        """The Instance class is a proxy for the underlying :class:`pyprland.data.models.InstanceData` class attributes.
+
+        This is implemented by relaying attribute access to the underlying data model for all attributes
+        which are not direct attributes of the class.
+        """
         if name in [
             'event_socket', 'command_socket',
             'signal_workspace_created', 'signal_workspace_destroyed', 'signal_active_workspace_changed'
@@ -43,20 +48,20 @@ class Instance:
 
 
     def get_windows(self) -> List['windows.Window']:
-        """Returns all :class:`pyprland.models.window.Window` currently managed by Hyprland.
+        """Returns all :class:`pyprland.components.windows.Window`s currently managed by the Instance.
     
-        :return: A list containing :class:`pyprland.models.window.Window`s.
-        :raises :class:`pyprland.exceptions.NonZeroStatusException`: if `hyperctl` failed to execute.
+        :return: A list containing :class:`pyprland.components.windows.Window`s.
         """
 
         windows_data = json.loads(self.command_socket.send_command('clients', flags=['-j']))
         return [windows.Window(window_data, self) for window_data in windows_data]
 
     def get_window_by_address(self, address: str) -> Union['windows.Window', None]:
-        """Retrieves the :class:`pyprland.models.window.Window` with the specified :param:`address`.
+        """Retrieves the :class:`pyprland.components.windows.Window` with the specified :param:`address`.
 
         The :param:`address` must be a valid hexadecimal string.
-        :return: The :class:`pyprland.models.window.Window` if it exists, or `None` otherwise.
+
+        :return: The :class:`pyprland.components.windows.Window` if it exists, or `None` otherwise.
         :raises :class:`TypeError`: If :param:`address` is not a string.
         :raises :class:`ValueError`: If :param:`address` is not a valid hexadecimal string.
         """
@@ -68,19 +73,18 @@ class Instance:
 
 
     def get_workspaces(self) -> List['workspaces.Workspace']:
-        """Returns all :class:`pyprland.models.workspace.Workspace`s currently managed by Hyprland.
+        """Returns all :class:`pyprland.components.workspaces.Workspace`s currently managed by Hyprland.
     
-        :return: A list containing :class:`pyprland.models.workspace.Workspace`s.
-        :raises :class:`pyprland.exceptions.NonZeroStatusException`: if `hyperctl` failed to execute.
+        :return: A list containing :class:`pyprland.components.workspaces.Workspace`s.
         """
 
         workspaces_data = json.loads(self.command_socket.send_command('workspaces', flags=['-j']))
         return [workspaces.Workspace(workspace_data, self) for workspace_data in workspaces_data]
 
     def get_workspace_by_id(self, id: int) -> Union['workspaces.Workspace', None]:
-        """Retrieves the :class:`pyprland.models.workspace.Workspace` with the specified :param:`id`.
+        """Retrieves the :class:`pyprland.components.workspaces.Workspace` with the specified :param:`id`.
 
-        :return: The :class:`pyprland.models.workspace.Workspace` if it exists, or `None` otherwise.
+        :return: The :class:`pyprland.components.workspaces.Workspace` if it exists, or `None` otherwise.
         :raises :class:`TypeError`: If :param:`id` is not an integer.
         """
 
@@ -90,9 +94,9 @@ class Instance:
                 return workspace
 
     def get_workspace_by_name(self, name: int) -> Union['workspaces.Workspace', None]:
-        """Retrieves the :class:`pyprland.models.workspace.Workspace` with the specified :param:`name`.
+        """Retrieves the :class:`pyprland.components.workspaces.Workspace` with the specified :param:`name`.
 
-        :return: The :class:`pyprland.models.workspace.Workspace` if it exists, or `None` otherwise.
+        :return: The :class:`pyprland.components.workspaces.Workspace` if it exists, or `None` otherwise.
         :raises :class:`TypeError`: If :param:`name` is not a string.
         """
 
@@ -103,19 +107,18 @@ class Instance:
 
     
     def get_monitors(self) -> List['monitors.Monitor']:
-        """Returns all :class:`pyprland.models.monitor.Monitor`s currently managed by Hyprland.
+        """Returns all :class:`pyprland.components.monitors.Monitor`s currently managed by Hyprland.
     
-        :return: A list containing :class:`pyprland.models.monitor.Monitor`s.
-        :raises :class:`pyprland.exceptions.NonZeroStatusException`: if `hyperctl` failed to execute.
+        :return: A list containing :class:`pyprland.components.monitors.Monitor`s.
         """
 
         monitors_data = json.loads(self.command_socket.send_command('monitors', flags=['-j']))
         return [monitors.Monitor(monitor_data, self) for monitor_data in monitors_data]
 
     def get_monitor_by_id(self, id: int) -> Union['monitors.Monitor', None]:
-        """Retrieves the :class:`pyprland.models.monitor.Monitor` with the specified :param:`id`.
+        """Retrieves the :class:`pyprland.components.monitors.Monitor` with the specified :param:`id`.
 
-        :return: The :class:`pyprland.models.monitor.Monitor` if it exists, or `None` otherwise.
+        :return: The :class:`pyprland.components.monitors.Monitor` if it exists, or `None` otherwise.
         :raises :class:`TypeError`: If :param:`id` is not an integer.
         """
 
@@ -125,9 +128,9 @@ class Instance:
                 return monitor
 
     def get_monitor_by_name(self, name: str) -> Union['monitors.Monitor', None]:
-        """Retrieves the :class:`pyprland.models.monitor.Monitor` with the specified :param:`name`.
+        """Retrieves the :class:`pyprland.components.monitors.Monitor` with the specified :param:`name`.
 
-        :return: The :class:`pyprland.models.monitor.Monitor` if it exists, or `None` otherwise.
+        :return: The :class:`pyprland.components.monitors.Monitor` if it exists, or `None` otherwise.
         :raises :class:`TypeError`: If :param:`name` is not a string.
         :raises :class:`ValueError`: If :param:`name` the empty string.
         """
@@ -139,6 +142,11 @@ class Instance:
 
 
     def watch(self) -> None:
+        """Continuosly monitors the Hyprland event socket and emits signals when events occur.
+
+        This is a blocking method which runs indefinitely.
+        Signals are continuosly emitted, as soon as Hyprland events are detected.
+        """
 
         def _handle_socket_data(data: str):
             signal_for_event = {
@@ -155,12 +163,15 @@ class Instance:
             for line in lines:
                 event_name, event_data = line.split('>>', maxsplit=1)
 
+                # Pick the signal to emit based on the event's name
                 if event_name not in signal_for_event:
                     continue
                 signal = signal_for_event[event_name]
                 if not signal._observers:
+                    # If the signal has no observers, just exit
                     continue
 
+                # We send specific data along with the signal, depending on the event
                 if event_name == 'openwindow':
                     new_window = self.get_window_by_address(event_data.split(',')[0])
                     signal.emit(new_window=new_window)

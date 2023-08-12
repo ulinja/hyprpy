@@ -1,4 +1,4 @@
-"""General validators used for Pydantic's type annotations and validation."""
+"""Custom validators used for type annotations and model instance validation."""
 
 from typing_extensions import Annotated
 

@@ -1,4 +1,4 @@
-"""Utilities for invoking shell commands."""
+"""Utilities for shell-related operations."""
 
 import logging
 import os

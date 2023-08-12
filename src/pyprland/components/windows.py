@@ -10,6 +10,8 @@ class Window:
         self._instance = instance
 
     def __getattr__(self, name):
+        """Relay attribute access to the underlying :class:`pyprland.data.models.WindowData` model class."""
+
         if name == 'instance':
             return self._instance
         else:
@@ -17,9 +19,9 @@ class Window:
     
     @property
     def workspace(self) -> 'workspaces.Workspace':
-        """Returns the :class:`pyprland.models.workspace.Workspace` which this window is in.
+        """Returns the :class:`pyprland.components.workspace.Workspace` which this window is in.
 
-        :return: The :class:`pyprland.models.workspace.Workspace` this window is on.
+        :return: The :class:`pyprland.components.workspace.Workspace` this window is on.
         """
 
         workspace = self._instance.get_workspace_by_id(self._data.workspace_id)
@@ -27,13 +29,11 @@ class Window:
             raise ParentNotFoundException(f"Parent workspace {self._data.workspace_id=} not found.")
         return workspace
 
-
     @property
     def address_as_int(self) -> int:
         """Returns the integer representation of the window's `address` property."""
 
         return int(self._data.address, 16)
-
 
     def __repr__(self):
         max_title_length = 24

@@ -1,10 +1,11 @@
-"""Common classes for components."""
+"""Common classes, shared among different components."""
 
 
 class ParentNotFoundException(Exception):
-    """Raised when an object's parent could not be found.
+    """Raised when a component's parent could not be found.
 
-    This exception should only ever occur due to a programming error, for example when
-    a :class:`pyprland.models.window.Window` knows the ID of the workspace it is on, but
-    no workspace with that ID exists in the list of all workspaces.
+    This exception may occur due to programming errors or race conditions, for example when
+    a :class:`pyprland.components.windows.Window` knows the ID of the
+    :class:`pyprland.components.workspaces.Workspace` it is on, but no workspace with that ID
+    exists.
     """

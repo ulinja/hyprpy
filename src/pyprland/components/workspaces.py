@@ -12,6 +12,8 @@ class Workspace:
         self._instance = instance
 
     def __getattr__(self, name):
+        """Relay attribute access to the underlying :class:`pyprland.data.models.WorkspaceData` model class."""
+
         if name == 'instance':
             return self._instance
         else:
@@ -19,9 +21,9 @@ class Workspace:
 
     @property
     def monitor(self) -> 'monitors.Monitor':
-        """Returns the :class:`pyprland.models.monitor.Monitor` which this workspace is on.
+        """Returns the :class:`pyprland.components.monitor.Monitor` which this workspace is on.
 
-        :return: The :class:`pyprland.models.monitor.Monitor` this workspace is on.
+        :return: The :class:`pyprland.components.monitor.Monitor` this workspace is on.
         """
 
         monitor = self._instance.get_monitor_by_name(self._data.monitor_name)
@@ -29,12 +31,11 @@ class Workspace:
             raise ParentNotFoundException(f"Parent monitor {self._data.monitor_name=!r} not found.")
         return monitor
 
-
     @property
     def windows(self) -> List['windows.Window']:
-        """Returns all :class:`pyprland.models.window.Window`s on this workspace.
+        """Returns all :class:`pyprland.components.window.Window`s on this workspace.
 
-        :return: A list containing all :class:`pyprland.models.window.Window`s on this workspace.
+        :return: A list containing all :class:`pyprland.components.window.Window`s on this workspace.
         """
 
         windows = []
@@ -42,7 +43,6 @@ class Workspace:
             if window.workspace_id == self.id:
                 windows.append(window)
         return windows
-
 
     @property
     def last_window_address_as_int(self) -> int:

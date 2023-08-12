@@ -1,3 +1,21 @@
+"""
+pyprland.data.models
+====================
+
+This module defines Pydantic model classes for parsing and validating the JSON output received
+from the Hyprland socket. The models are designed to represent and store data about various
+components of Hyprland, such as windows, workspaces, monitors, and instances.
+
+Pydantic enables automatic model validation and seamless serialization/deserialization of data,
+based almost purely on class structure and type annotations.
+
+Classes:
+    - :class:`WindowData`: Holds data specific to a Hyprland window.
+    - :class:`WorkspaceData`: Represents data about a Hyprland workspace.
+    - :class:`MonitorData`: Stores information about a monitor in the Hyprland environment.
+    - :class:`InstanceData`: Contains data about a particular Hyprland instance.
+"""
+
 from typing import List
 
 from pydantic import BaseModel, Field, AliasPath
@@ -6,10 +24,7 @@ from pyprland.data.validators import HexString, NonEmptyString
 
 
 class WindowData(BaseModel):
-    """Represents a window (also called client) in the Hyprland wayland compositor.
-
-    The class allows reading of various window attributes, from the address and window dimensions to more specific attributes like
-    `is_fullscreen` and `is_pinned`.
+    """Stores data about a Hyprland window.
 
     Attributes:
         address (str): String representation of a hexadecimal number, unique identifier for the window.
@@ -34,6 +49,7 @@ class WindowData(BaseModel):
         fullscreen_mode (int): Unknown.
         is_fake_fullscreen (bool): Unknown.
     """
+
     address: HexString
     is_mapped: bool = Field(..., alias="mapped")
     is_hidden: bool = Field(..., alias="hidden")
@@ -58,9 +74,7 @@ class WindowData(BaseModel):
 
 
 class WorkspaceData(BaseModel):
-    """Represents a workspace in the Hyprland wayland compositor.
-
-    The class allows reading of workspace attributes.
+    """Stores data about a Hyprland workspace.
 
     Attributes:
         id (int): Numeric ID of the workspace.
@@ -71,6 +85,7 @@ class WorkspaceData(BaseModel):
         window_count (int): Number of windows placed in the workspace.
         has_fullscreen (bool): True if at least one window in the workspace is in fullscreen mode.
     """
+
     id: int
     name: str
     monitor_name: str = Field(..., alias="monitor")
@@ -81,9 +96,7 @@ class WorkspaceData(BaseModel):
 
 
 class MonitorData(BaseModel):
-    """Represents a Monitor in the Hyprland wayland compositor.
-
-    The class allows reading of monitor attributes.
+    """Stores data about a Hyprland monitor.
 
     Attributes:
         id (int): Numeric ID of the monitor.
@@ -106,6 +119,7 @@ class MonitorData(BaseModel):
         uses_dpms (bool): Whether or not the monitor uses DPMS.
         vrr (bool): Unknown.
     """
+
     id: int
     name: str
     description: str
@@ -128,12 +142,10 @@ class MonitorData(BaseModel):
 
 
 class InstanceData(BaseModel):
-    """Represents an instance of Hyprland.
-
-    This class is not fully implemented yet. It will be used in the future to access the Hyprland IPC sockets.
+    """Stores data about a Hyprland instance.
 
     Attributes:
-        signature (str): Hyprland instance signature of the current instance.
+        signature (str): Instance signature of the Hyprland instance.
     """
 
     signature: NonEmptyString
