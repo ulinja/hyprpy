@@ -1,3 +1,13 @@
+"""This module provides the central `Instance` class for interfacing with Hyprland.
+
+This class acts as the root for accessing other components like workspaces, windows, and monitors,
+and offers capabilities to listen to events and signals emitted by the underlying Hyprland system.
+
+For more information on how to work with these components, refer to :mod:`pyprland.components`.
+
+:seealso: :mod:`pyprland.components`
+"""
+
 from typing import Dict, List, Type, Union
 import json
 import logging
@@ -11,6 +21,28 @@ log = logging.getLogger(__name__)
 
 
 class Instance:
+    """Represents an active Hyprland instance.
+
+    The Instance class is a primary interface for interacting with the Hyprland system. It provides methods
+    for accessing windows, workspaces, and monitors, as well as emitting signals based on events in the
+    Hyprland environment.
+
+    The attributes of an instance directly map to the data attributes available in the underlying
+    :class:`pyprland.data.models.InstanceData`.
+
+    For a complete guide on how to use the `Instance` class and related components,
+    refer to :mod:`pyprland.components`.
+
+    Attributes:
+        event_socket (:class:`pyprland.utils.sockets.EventSocket`): The Hyprland event socket for this instance.
+        command_socket (:class:`pyprland.utils.sockets.CommandSocket`): The Hyprland command socket for this instance.
+        signal_workspace_created (:class:`pyprland.utils.signals.Signal`): Signal emitted when a new workspace gets created.
+        signal_workspace_destroyed (:class:`pyprland.utils.signals.Signal`): Signal emitted when an existing workspace gets destroyed.
+        signal_active_workspace_changed (:class:`pyprland.utils.signals.Signal`): Signal emitted when the focus changes to another workspace.
+        signal_window_created (:class:`pyprland.utils.signals.Signal`): Signal emitted when a new window gets created.
+        signal_window_destroyed (:class:`pyprland.utils.signals.Signal`): Signal emitted when an existing window gets destroyed.
+        signal_active_window_changed (:class:`pyprland.utils.signals.Signal`): Signal emitted when the focus changes to another window.
+    """
 
     def __init__(self, signature: str = shell.get_env_var_or_fail('HYPRLAND_INSTANCE_SIGNATURE')):
         self._data = InstanceData(signature=signature)

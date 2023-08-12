@@ -1,9 +1,25 @@
+"""This module provides the `Window` class for interfacing with individual windows in the Hyprland system.
+
+For a broader overview of the component system in Pyprland, refer to :mod:`pyprland.components`.
+
+:seealso: :mod:`pyprland.components`
+"""
+
 from pyprland.data.models import WindowData
 from pyprland.components import instances, workspaces
 from pyprland.components.common import ParentNotFoundException
 
 
 class Window:
+    """Represents an individual window within the Hyprland system.
+
+    The attributes of a `Window` instance map directly to the data attributes available in the underlying
+    :class:`pyprland.data.models.WindowData`.
+
+    Attributes:
+        workspace (:class:`pyprland.components.workspaces.Workspace`): The :class:`pyprland.components.workspaces.Workspace` this window belongs to.
+        address_as_int (int): Integer representation of the window's address.
+    """
 
     def __init__(self, window_data: dict, instance: 'instances.Instance'):
         self._data = WindowData.model_validate(window_data)

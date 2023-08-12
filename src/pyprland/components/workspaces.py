@@ -1,3 +1,10 @@
+"""This module provides the `Workspace` class for interfacing with individual workspaces in the Hyprland system.
+
+For a broader overview of the component system in Pyprland, refer to :mod:`pyprland.components`.
+
+:seealso: :mod:`pyprland.components`
+"""
+
 from typing import List
 
 from pyprland.data.models import WorkspaceData
@@ -6,6 +13,16 @@ from pyprland.components.common import ParentNotFoundException
 
 
 class Workspace:
+    """Represents an individual workspace within the Hyprland system.
+
+    The attributes of a `Workspace` instance map directly to the data attributes available in the underlying
+    :class:`pyprland.data.models.WorkspaceData`.
+
+    Attributes:
+        monitor (:class:`pyprland.components.monitors.Monitor`): The :class:`pyprland.components.monitors.Monitor` this workspace is on.
+        windows (list): The list of :class:`pyprland.components.windows.Window`s on this workspace.
+        last_window_address_as_int (int): Integer representation of the most recently active window's address on this workspace.
+    """
 
     def __init__(self, workspace_data: dict, instance: 'instances.Instance'):
         self._data = WorkspaceData.model_validate(workspace_data)
