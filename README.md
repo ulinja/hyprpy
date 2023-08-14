@@ -1,29 +1,29 @@
-# Pyprland
+# Hyprpy
 
-Python bindings for the [Hyprland](https://hyprland.org/) wayland compositor.
+[Hyprpy](https://github.com/ulinja/hyprpy) provides python bindings for the [Hyprland](https://hyprland.org/) wayland compositor.
 
-With Pyprland you can very easily retrieve information about windows, workspaces and monitors
+With Hyprpy you can very easily retrieve information about windows, workspaces and monitors
 in a running Hyprland instance.
 
 It also offers an event monitor, allowing you to write your own callback functions which
 execute in response to Hyprland events.
 
-Pyprland uses unix sockets to communicate with Hyprland, making it **fast** and **efficient**.
+Hyprpy uses unix sockets to communicate with Hyprland, making it **fast** and **efficient**.
 
-The library is fully typed and very well documented, [check out the documentation](https://pyprland.docs.lobbes.dev).
+The library is fully typed and very well documented, [check out the documentation](https://hyprpy.docs.lobbes.dev).
 
 ## Quickstart
 
 ### Installation
 
 ```bash
-pip install pyprland
+pip install hyprpy
 ```
 
 ### Usage examples
 
 ```python
-from pyprland import Hyprland
+from hyprpy import Hyprland
 
 instance = Hyprland()
 
@@ -59,7 +59,7 @@ if special_workspace is not None:
 
 
 # Show a desktop notification every time we switch to workspace 6
-from pyprland.utils.shell import run_or_fail
+from hyprpy.utils.shell import run_or_fail
 
 def workspace_changed(sender, **kwargs):
     current_workspace = kwargs.get('active_workspace')
@@ -72,7 +72,7 @@ instance.watch()
 
 ## Development
 
-Pyprland is in active development! Please file an issue if you find any bugs or have a feature request.
+Hyprpy is in active development! Please file an issue if you find any bugs or have a feature request.
 
 Your contributions are greatly appreciated.
 

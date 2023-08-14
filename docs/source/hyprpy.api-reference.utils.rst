@@ -4,9 +4,9 @@ Utilities API
 =============
 
 This is the utilities API reference.
-Here you will details about different Pyprland utility classes.
+Here you will details about different Hyprpy utility classes.
 
-.. automodule:: pyprland.utils
+.. automodule:: hyprpy.utils
    :members:
    :undoc-members:
    :show-inheritance:
@@ -14,7 +14,7 @@ Here you will details about different Pyprland utility classes.
 Signals
 -------
 
-.. automodule:: pyprland.utils.signals
+.. automodule:: hyprpy.utils.signals
    :members:
    :undoc-members:
    :show-inheritance:
@@ -22,7 +22,7 @@ Signals
 Sockets
 -------
 
-.. automodule:: pyprland.utils.sockets
+.. automodule:: hyprpy.utils.sockets
    :members:
    :undoc-members:
    :show-inheritance:
@@ -30,7 +30,7 @@ Sockets
 Shell
 -----
 
-.. automodule:: pyprland.utils.shell
+.. automodule:: hyprpy.utils.shell
    :members:
    :undoc-members:
    :show-inheritance:
@@ -38,7 +38,7 @@ Shell
 Assertions
 ----------
 
-.. automodule:: pyprland.utils.assertions
+.. automodule:: hyprpy.utils.assertions
    :members:
    :undoc-members:
    :show-inheritance:

@@ -3,7 +3,7 @@
 Components Guide
 ================
 
-.. automodule:: pyprland.components
+.. automodule:: hyprpy.components
    :members:
    :undoc-members:
    :show-inheritance:

@@ -8,7 +8,7 @@ Example:
 
 .. code-block:: python
 
-    from pyprland.utils.signals import Signal
+    from hyprpy.utils.signals import Signal
 
     class MyClass:
         def __init__(self):
@@ -31,7 +31,7 @@ Example:
 
 from typing import Callable, List
 
-from pyprland.utils import assertions
+from hyprpy.utils import assertions
 
 
 class Signal():

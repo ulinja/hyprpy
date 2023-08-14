@@ -13,7 +13,7 @@ Examples:
 
 .. code-block:: python
 
-    from pyprland.utils.sockets import EventSocket, CommandSocket
+    from hyprpy.utils.sockets import EventSocket, CommandSocket
 
     # For command socket
     cs = CommandSocket(signature="<hyprland-instance-signature>")
@@ -33,7 +33,7 @@ from pathlib import PosixPath
 import socket
 import logging
 
-from pyprland.utils import assertions
+from hyprpy.utils import assertions
 
 
 log = logging.getLogger(__name__)

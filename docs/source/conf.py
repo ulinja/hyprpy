@@ -1,21 +1,13 @@
-# Configuration file for the Sphinx documentation builder.
-#
-# For the full list of built-in configuration values, see the documentation:
-# https://www.sphinx-doc.org/en/master/usage/configuration.html
-
-# -- Project information -----------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
-
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../../'))  # To find your module's docstrings
 
-html_theme = 'sphinx_rtd_theme'
+html_theme = 'press'
 
-project = 'Pyprland'
+project = 'Hyprpy'
 copyright = '2023, Julian Lobbes'
 author = 'Julian Lobbes'
-release = 'v-0.1.0'
+release = '0.1.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -35,5 +27,14 @@ autodoc_preserve_defaults = True
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'alabaster'
+html_theme = 'press'
 html_static_path = ['_static']
+html_sidebars = {'**': ['util/searchbox.html', 'util/sidetoc.html']}
+html_theme_options = {
+  "external_links": [
+      ("Github", "https://github.com/ulinja/hypry"),
+      ("Contact", "https://lobbes.dev/contact")
+  ]
+}
+html_css_files = ["css/custom.css"]
+html_logo = '_static/hyprpy-logo.png'

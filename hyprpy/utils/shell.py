@@ -5,7 +5,7 @@ import os
 from typing import Tuple
 import subprocess
 
-import pyprland.utils.assertions as assertions
+import hyprpy.utils.assertions as assertions
 
 
 log = logging.getLogger(__name__)
@@ -29,7 +29,7 @@ def run_or_fail(command: list[str]) -> Tuple[str, str]:
 
     .. code-block:: python
 
-        from pyprland.utils.shell import run_or_fail
+        from hyprpy.utils.shell import run_or_fail
 
         cmd = ['echo', 'Hello world!']
         response = run_or_fail(cmd)

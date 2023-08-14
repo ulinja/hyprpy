@@ -6,7 +6,7 @@ ensuring that data retrieved from Hyprland is correctly structured and validated
 Utility:
     Through `Pydantic <https://docs.pydantic.dev/latest/>`_, the library offers
     a robust mechanism for parsing, validating, and serializing JSON data.
-    The source of this JSON data is primarily the :class:`~pyprland.utils.sockets.CommandSocket`
+    The source of this JSON data is primarily the :class:`~hyprpy.utils.sockets.CommandSocket`
     which interacts with Hyprland to retrieve current state and event information.
 
     Notably, these data models not only handle validation but also perform renaming of 
@@ -20,7 +20,7 @@ Example:
 
     .. code-block:: python
 
-        >>> from pyprland.data.models import WindowData
+        >>> from hyprpy.data.models import WindowData
 
         >>> # Output from `hyprctl -j clients` for example
         >>> window_json_str = '''

@@ -1,7 +1,7 @@
 """Data classes used for parsing, validating and storing JSON output received
 from the Hyprland command socket.
 
-The classes here store data about the various Pyprland components.
+The classes here store data about the various Hyprpy components.
 
 Each component class in the :ref:`Components API <api-components>` proxies attribute access to
 its respective data model class.
@@ -19,7 +19,7 @@ from typing import List
 
 from pydantic import BaseModel, Field, AliasPath
 
-from pyprland.data.validators import HexString, NonEmptyString
+from hyprpy.data.validators import HexString, NonEmptyString
 
 
 class WindowData(BaseModel):

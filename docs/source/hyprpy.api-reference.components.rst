@@ -4,15 +4,15 @@ Components API
 ==============
 
 This is the component API reference.
-Here you will find the nitty-gritty details about Pyprland component objects.
+Here you will find the nitty-gritty details about Hyprpy component objects.
 
 For a more general overview on how to use components, take a look at the
-:mod:`~pyprland.components` guide.
+:mod:`~hyprpy.components` guide.
 
 Instance
 --------
 
-.. automodule:: pyprland.components.instances
+.. automodule:: hyprpy.components.instances
    :members:
    :undoc-members:
    :show-inheritance:
@@ -20,7 +20,7 @@ Instance
 Window
 ------
 
-.. automodule:: pyprland.components.windows
+.. automodule:: hyprpy.components.windows
    :members:
    :undoc-members:
    :show-inheritance:
@@ -28,7 +28,7 @@ Window
 Workspace
 ---------
 
-.. automodule:: pyprland.components.workspaces
+.. automodule:: hyprpy.components.workspaces
    :members:
    :undoc-members:
    :show-inheritance:
@@ -36,7 +36,7 @@ Workspace
 Monitor
 -------
 
-.. automodule:: pyprland.components.monitors
+.. automodule:: hyprpy.components.monitors
    :members:
    :undoc-members:
    :show-inheritance:
@@ -44,7 +44,7 @@ Monitor
 Misc.
 -----
 
-.. automodule:: pyprland.components.common
+.. automodule:: hyprpy.components.common
    :members:
    :undoc-members:
    :show-inheritance:

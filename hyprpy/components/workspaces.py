@@ -2,16 +2,16 @@
 
 from typing import List
 
-from pyprland.data.models import WorkspaceData
-from pyprland.components import instances, windows, monitors
-from pyprland.components.common import ParentNotFoundException
+from hyprpy.data.models import WorkspaceData
+from hyprpy.components import instances, windows, monitors
+from hyprpy.components.common import ParentNotFoundException
 
 
 class Workspace:
     """Represents a workspace in Hyprland.
 
     The data attributes of a :class:`Workspace` map directly to the data attributes of the underlying
-    :class:`~pyprland.data.models.WorkspaceData` data class.
+    :class:`~hyprpy.data.models.WorkspaceData` data class.
     """
 
     def __init__(self, workspace_data: dict, instance: 'instances.Instance'):
@@ -19,7 +19,7 @@ class Workspace:
         self._instance = instance
 
     def __getattr__(self, name):
-        """Relays attribute access to the underlying :class:`~pyprland.data.models.WorkspaceData` data model class."""
+        """Relays attribute access to the underlying :class:`~hyprpy.data.models.WorkspaceData` data model class."""
 
         if name == 'instance':
             return self._instance
@@ -28,9 +28,9 @@ class Workspace:
 
     @property
     def monitor(self) -> 'monitors.Monitor':
-        """The :class:`~pyprland.components.monitor.Monitor` this workspace is on.
+        """The :class:`~hyprpy.components.monitor.Monitor` this workspace is on.
 
-        :return: The :class:`~pyprland.components.monitor.Monitor` this workspace is on.
+        :return: The :class:`~hyprpy.components.monitor.Monitor` this workspace is on.
         """
 
         monitor = self._instance.get_monitor_by_name(self._data.monitor_name)
@@ -40,9 +40,9 @@ class Workspace:
 
     @property
     def windows(self) -> List['windows.Window']:
-        """The list of all :class:`~pyprland.components.window.Window`\\ s on this workspace.
+        """The list of all :class:`~hyprpy.components.window.Window`\\ s on this workspace.
 
-        :return: A list containing all :class:`~pyprland.components.window.Window`\\ s on this workspace.
+        :return: A list containing all :class:`~hyprpy.components.window.Window`\\ s on this workspace.
         """
 
         windows = []
@@ -53,7 +53,7 @@ class Workspace:
 
     @property
     def last_window_address_as_int(self) -> int:
-        """Returns the integer representation of the workspace's :attr:`~pyprland.data.models.WorkspaceData.last_window_address` property."""
+        """Returns the integer representation of the workspace's :attr:`~hyprpy.data.models.WorkspaceData.last_window_address` property."""
 
         return int(self._data.last_window_address, 16)
 

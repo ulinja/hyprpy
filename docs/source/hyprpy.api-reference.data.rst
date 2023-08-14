@@ -6,12 +6,12 @@ Data API
 This is the component data reference, where you will all the available data attributes for the different
 components.
 
-Pyprland retrieves data about Hyprland components by talking to Hyprland's :class:`~pyprland.utils.sockets.CommandSocket`.
+Hyprpy retrieves data about Hyprland components by talking to Hyprland's :class:`~hyprpy.utils.sockets.CommandSocket`.
 The data retrieved from the socket arrives as JSON.
 This JSON data needs to be parsed, validated, and converted into python objects with proper
 attribute names.
 
-Pyprland leverages `Pydantic <https://docs.pydantic.dev/latest/>`_ under the hood
+Hyprpy leverages `Pydantic <https://docs.pydantic.dev/latest/>`_ under the hood
 to parse socket data into python objects.
 This enables automatic model validation and serialization/deserialization of data,
 based purely on class structure and type annotations.
@@ -21,7 +21,7 @@ based purely on class structure and type annotations.
 Data model classes
 ------------------
 
-.. automodule:: pyprland.data.models
+.. automodule:: hyprpy.data.models
    :members:
    :undoc-members:
    :show-inheritance:
@@ -30,7 +30,7 @@ Data model classes
 Data model background
 ---------------------
 
-.. automodule:: pyprland.data
+.. automodule:: hyprpy.data
    :members:
    :undoc-members:
    :show-inheritance:
@@ -38,7 +38,7 @@ Data model background
 Component Data validators
 -------------------------
 
-.. automodule:: pyprland.data.validators
+.. automodule:: hyprpy.data.validators
    :members:
    :undoc-members:
    :show-inheritance:
