@@ -1,20 +1,17 @@
-"""
-pyprland.utils.sockets
-======================
-
-Provides interfaces for UNIX socket operations tailored for interactions with 
-Hyprland's event and command sockets.
+"""Interfaces for UNIX socket operations with Hyprland's event and command sockets.
 
 Hyprland offers two UNIX sockets:
 
-1. EventSocket: This socket broadcasts various events occurring in the Hyprland session, 
+1. `EventSocket <https://wiki.hyprland.org/IPC/#tmphyprhissocket2sock>`_: This socket broadcasts various events occurring in the Hyprland session, 
    e.g., windows or workspaces getting created or destroyed.
-2. CommandSocket: This socket can be written to in order to influence Hyprland's behavior 
+2. `CommandSocket <https://wiki.hyprland.org/IPC/#tmphyprhissocketsock>`_: This socket can be written to in order to influence Hyprland's behavior 
    or send queries about the current state.
 
 More information can be found at https://wiki.hyprland.org/IPC/
 
 Examples:
+
+.. code-block:: python
 
     from pyprland.utils.sockets import EventSocket, CommandSocket
 
@@ -50,11 +47,12 @@ class SocketError(Exception):
 class AbstractSocket(ABC):
     """Base class for concrete socket classes.
 
-    Hold shared attributes of the specific socket types.
+    Holds shared attributes of the specific socket types.
     """
 
     def __init__(self, signature: str):
         assertions.assert_is_nonempty_string(signature)
+        #: The Hyperland Instance Signature
         self._signature = signature
 
 
@@ -63,8 +61,6 @@ class EventSocket(AbstractSocket):
 
     This socket broadcasts events about the ongoing Hyprland session, such as
     windows or workspaces being created or destroyed.
-
-    :param signature: The Hyprland instance ID.
     """
 
     conncection_timeout_seconds: float = 1.0
@@ -80,9 +76,9 @@ class EventSocket(AbstractSocket):
     def get_socket(self):
         """Creates and returns a connection to the event socket.
 
-        :return: The connected socket object.
+        :return: A **connected** :class:`socket.socket` object.
         :rtype: socket.socket
-        :raises SocketError: If the connection process takes too long.
+        :raises: :class:`socket.SocketError` if the connection process takes too long.
         """
 
         s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
@@ -100,9 +96,7 @@ class CommandSocket(AbstractSocket):
     """Interface to Hyprland's command socket.
 
     Provides the :meth:`CommandSocket.send_command` method, which can be used to send
-    a wide range of commands, as explained in the Hyprland wiki.
-
-    :param signature: The Hyprland instance signature.
+    a wide range of commands, as explained in `the Hyprland wiki <https://wiki.hyprland.org/Configuring/Using-hyprctl>`_.
     """
 
     conncection_timeout_seconds: float = 1.0
@@ -118,16 +112,19 @@ class CommandSocket(AbstractSocket):
     def send_command(self, command: str, flags: List[str] = [], args: List[str] = []) -> str:
         """Sends a command through the socket and returns the received response.
 
-        The command syntax and options are the same as when using `hyprctl`, but the `hyprctl`
-        can be omitted. Read https://wiki.hyprland.org/Configuring/Using-hyprctl/ for more information.
+        The command syntax and options are the same as when using ``hyprctl``, but the ``hyprctl``
+        part can be omitted. Read `the wiki entry <https://wiki.hyprland.org/Configuring/Using-hyprctl/>`_
+        for more information.
 
         :param command: The command string.
         :param flags: Any flags to accompany the command.
         :param args: Arguments for the command.
         :return: Response from the socket.
-        :raises SocketError: If a timeout occurs during the sending process.
+        :raises: :class:`socket.SocketError` if a timeout occurs during the sending process.
 
         Example:
+
+        .. code-block:: python
 
             response = command_socket.send_command("clients", flags=["-j"])
             # response contains JSON listing all Hyprland clients

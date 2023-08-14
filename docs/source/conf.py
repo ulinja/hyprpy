@@ -20,6 +20,7 @@ release = 'v-0.1.0'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
+add_module_names = False
 extensions = [
     'sphinx.ext.autodoc',
 ]
@@ -27,6 +28,8 @@ extensions = [
 templates_path = ['_templates']
 exclude_patterns = []
 
+autodoc_member_order = 'bysource'
+autodoc_preserve_defaults = True
 
 
 # -- Options for HTML output -------------------------------------------------

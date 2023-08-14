@@ -1,27 +1,12 @@
-"""
-Data Models for Pyprland
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-The `data` module provides Pydantic-based data model classes designed for defining 
+"""The `data` module provides Pydantic-based data model classes designed for defining 
 the data structure, validation, and serialization/deserialization of the various 
 Hyprland components. These model classes act as the central point of data transformation, 
 ensuring that data retrieved from Hyprland is correctly structured and validated.
 
-Components:
-    Each Hyprland component, like instances, monitors, workspaces, and windows, is 
-    encapsulated by its respective data model:
-
-    - :class:`pyprland.data.models.Instance`: Represents a Hyprland instance.
-    - :class:`pyprland.data.models.Monitor`: Represents a monitor in Hyprland.
-    - :class:`pyprland.data.models.Workspace`: Represents a workspace in Hyprland.
-    - :class:`pyprland.data.models.Window`: Represents a window in Hyprland.
-
-    Refer to :mod:`pyprland.data.modules` for available attributes on each component.
-
 Utility:
     Through `Pydantic <https://docs.pydantic.dev/latest/>`_, the library offers
     a robust mechanism for parsing, validating, and serializing JSON data.
-    The source of this JSON data is primarily the :class:`pyprland.utils.sockets.CommandSocket`
+    The source of this JSON data is primarily the :class:`~pyprland.utils.sockets.CommandSocket`
     which interacts with Hyprland to retrieve current state and event information.
 
     Notably, these data models not only handle validation but also perform renaming of 
@@ -32,6 +17,7 @@ Serialization:
     flexibility in both consuming Hyprland data and in using it for further operations.
 
 Example:
+
     .. code-block:: python
 
         >>> from pyprland.data.models import WindowData

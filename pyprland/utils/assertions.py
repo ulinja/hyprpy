@@ -1,14 +1,14 @@
-"""Utility functions for type and sanity checking."""
+"""Utility functions for type- and sanity checking."""
 
 from typing import Any
 import inspect
 
 
 def assert_is_bool(value: Any) -> None:
-    """Raises an exception if :param:`value` is not a boolean.
+    """Raises an exception if ``value`` is not a boolean.
 
     :param value: The input to check.
-    :raises TypeError: When :param:`value` is not a boolean.
+    :raises: :class:`TypeError` if ``value`` is not a boolean.
     """
 
     if not isinstance(value, bool):
@@ -16,10 +16,10 @@ def assert_is_bool(value: Any) -> None:
 
 
 def assert_is_int(value: Any) -> None:
-    """Raises an exception if :param:`value` is not an integer.
+    """Raises an exception if ``value`` is not an integer.
 
     :param value: The input to check.
-    :raises TypeError: When :param:`value` is not a integer.
+    :raises: :class:`TypeError` if ``value`` is not a integer.
     """
 
     if not isinstance(value, int):
@@ -27,10 +27,10 @@ def assert_is_int(value: Any) -> None:
 
 
 def assert_is_string(value: Any) -> None:
-    """Raises an exception if :param:`value` is not a string.
+    """Raises an exception if ``value`` is not a string.
 
     :param value: The input to check.
-    :raises TypeError: When :param:`value` is not a string.
+    :raises: :class:`TypeError` if ``value`` is not a string.
     """
 
     if not isinstance(value, str):
@@ -38,11 +38,11 @@ def assert_is_string(value: Any) -> None:
 
 
 def assert_is_nonempty_string(value: Any) -> None:
-    """Raises an exception if :param:`value` is not a string of length >= 1.
+    """Raises an exception if ``value`` is not a string of length >= 1.
 
     :param value: The input to check.
-    :raises TypeError: When :param:`value` is not a string.
-    :raises ValueError: When :param:`value` is an empty string.
+    :raises: :class:`TypeError` if ``value`` is not a string.
+    :raises: :class:`ValueError` if ``value`` is an empty string.
     """
 
     assert_is_string(value)
@@ -52,11 +52,11 @@ def assert_is_nonempty_string(value: Any) -> None:
 
 
 def assert_is_hexadecimal_string(value: Any) -> None:
-    """Raises an exception if :param:`value` is not a valid string representation of a hexadecimal number.
+    """Raises an exception if ``value`` is not a valid string representation of a hexadecimal number.
 
     :param value: The input to check.
-    :raises TypeError: When :param:`value` is not a string.
-    :raises ValueError: When :param:`value` is empty, or not a valid hexadecimal string.
+    :raises: :class:`TypeError` if ``value`` is not a string.
+    :raises: :class:`ValueError` if ``value`` is empty, or not a valid hexadecimal string.
     """
 
     assert_is_nonempty_string(value)
@@ -67,10 +67,10 @@ def assert_is_hexadecimal_string(value: Any) -> None:
 
 
 def assert_is_callable(value: Any) -> None:
-    """Raises an exception if :param:`value` is not callable.
+    """Raises an exception if ``value`` is not callable.
 
     :param value: The input to check.
-    :raises TypeError: When :param:`value` is not callable.
+    :raises: :class:`TypeError` if ``value`` is not callable.
     """
 
     if not callable(value):
@@ -78,11 +78,11 @@ def assert_is_callable(value: Any) -> None:
 
 
 def assert_is_callable_and_has_first_param_sender(value: Any) -> None:
-    """Raises an exception if :param:`value` is not a callable which has `sender` as its first positional argument.
+    """Raises an exception if ``value` is not a callable which has ``sender`` as its first positional argument.
 
     :param value: The input to check.
-    :raises TypeError: When :param:`value` is not callable.
-    :raises ValueError: When :param:`value` does not accept `sender` as its first positional argument.
+    :raises: :class:`TypeError` if ``value`` is not callable.
+    :raises: :class:`ValueError` if ``value` does not accept ``sender`` as its first positional argument.
     """
 
     assert_is_callable(value)
@@ -95,11 +95,11 @@ def assert_is_callable_and_has_first_param_sender(value: Any) -> None:
 
 
 def assert_is_callable_and_accepts_kwargs(value: Any) -> None:
-    """Raises an exception if :param:`value` is not a callable which accepts keyword arguments.
+    """Raises an exception if ``value`` is not a callable which accepts keyword arguments.
 
     :param value: The input to check.
-    :raises TypeError: When :param:`value` is not callable.
-    :raises ValueError: When :param:`value` does not accept keyword arguments.
+    :raises: :class:`TypeError` if ``value`` is not callable.
+    :raises: :class:`ValueError` if ``value`` does not accept keyword arguments.
     """
 
     assert_is_callable(value)

@@ -1,14 +1,12 @@
-"""
-pyprland.utils.signals
-======================
-
-A basic implementation of the observer pattern for emitting signals and connecting 
+"""A basic implementation of the observer pattern for emitting signals and connecting 
 listeners to them, similar to the Django signals framework.
 
 This module allows objects to declare signals that other parts of the application can
 connect callbacks to. When the signal is emitted, all connected callbacks are executed.
 
 Example:
+
+.. code-block:: python
 
     from pyprland.utils.signals import Signal
 
@@ -24,7 +22,11 @@ Example:
 
     obj = MyClass()
     obj.my_signal.connect(my_callback)
-    obj.perform_action()   # Output: <MyClass object at 0x...> says: Action performed!
+    obj.perform_action()
+    # Output: <MyClass object at 0x...> says: Action performed!
+
+:seealso: :ref:`Components: Reacting to events <guide-events>`
+
 """
 
 from typing import Callable, List
@@ -33,14 +35,17 @@ from pyprland.utils import assertions
 
 
 class Signal():
-    """A class representing a signal that can have multiple observers (callbacks) connected to it.
+    """A signal that can have multiple observers (callbacks) connected to it.
 
-    Every time the signal is emitted, all connected callbacks are executed.
-    When instantiating a signal, the sending object must be passed to the signal's constructor.
+    Each time the signal is emitted, all connected callbacks are executed.
+    When instantiating a signal, the sending object (sender) **must** be passed to
+    the signal's constructor.
 
-    :param sender: The source object that will be sending the signal.
+    :param sender: The source object sending the signal.
 
     Example:
+
+    .. code-block:: python
 
         class MyClass:
             def __init__(self):
@@ -58,16 +63,19 @@ class Signal():
 
 
     def connect(self, callback: Callable) -> None:
-        """Connects the specified :param:`callback` to this :class:`Signal`.
+        """Connects the specified ``callback`` to this :class:`Signal`.
 
-        The callback signature must contain `sender` as the positional argument, followed by `**kwargs`.
+        The callback signature **must** contain ``sender`` as the positional argument,
+        followed by ``**kwargs``.
 
         :param callback: The callback function to be connected to this signal.
-        :raises :class:`TypeError`: If :param:`callback` is not callable.
-        :raises :class:`ValueError`: If the :param:`callback`'s first positional argument is not `sender`.
-        :raises :class:`ValueError`: If the :param:`callback` does not accept keyword arguments.
+        :raises: :class:`TypeError` if ``callback`` is not callable.
+        :raises: :class:`ValueError` if the first positional argument of ``callback`` is not ``sender``.
+        :raises: :class:`ValueError` if ``callback`` does not accept keyword arguments.
 
         Example:
+
+        .. code-block:: python
 
             def my_callback(sender, **kwargs):
                 print(sender, kwargs)
@@ -82,14 +90,16 @@ class Signal():
 
 
     def disconnect(self, callback: Callable) -> None:
-        """Disconnects the specified :param:`callback` from this :class:`Signal`.
+        """Disconnects the specified ``callback`` from this :class:`Signal`.
 
         This is useful if you want to limit how often a callback should be executed.
 
         :param callback: The callback function to be disconnected.
-        :raises :class:`ValueError`: if the specified callback is not in the list of observers.
+        :raises: :class:`ValueError` if the specified callback is not in the list of observers.
 
         Example:
+
+        .. code-block:: python
 
             def my_callback(sender, **kwargs):
                 print(sender, kwargs)
@@ -110,9 +120,11 @@ class Signal():
         Any information to be sent to the observers should be provided as keyword arguments to
         this method.
 
-        :param **kwargs: Keyword arguments that will be passed to each callback.
+        :param \\**kwargs: Keyword arguments that will be passed to each callback.
 
         Example:
+
+        .. code-block:: python
 
             def my_callback(sender, **kwargs):
                 print(kwargs['message'])

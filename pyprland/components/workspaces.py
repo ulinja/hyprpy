@@ -1,9 +1,4 @@
-"""This module provides the `Workspace` class for interfacing with individual workspaces in the Hyprland system.
-
-For a broader overview of the component system in Pyprland, refer to :mod:`pyprland.components`.
-
-:seealso: :mod:`pyprland.components`
-"""
+""":class:`Workspace` objects represent individual workspaces in Hyprland."""
 
 from typing import List
 
@@ -13,15 +8,10 @@ from pyprland.components.common import ParentNotFoundException
 
 
 class Workspace:
-    """Represents an individual workspace within the Hyprland system.
+    """Represents a workspace in Hyprland.
 
-    The attributes of a `Workspace` instance map directly to the data attributes available in the underlying
-    :class:`pyprland.data.models.WorkspaceData`.
-
-    Attributes:
-        monitor (:class:`pyprland.components.monitors.Monitor`): The :class:`pyprland.components.monitors.Monitor` this workspace is on.
-        windows (list): The list of :class:`pyprland.components.windows.Window`s on this workspace.
-        last_window_address_as_int (int): Integer representation of the most recently active window's address on this workspace.
+    The data attributes of a :class:`Workspace` map directly to the data attributes of the underlying
+    :class:`~pyprland.data.models.WorkspaceData` data class.
     """
 
     def __init__(self, workspace_data: dict, instance: 'instances.Instance'):
@@ -29,7 +19,7 @@ class Workspace:
         self._instance = instance
 
     def __getattr__(self, name):
-        """Relay attribute access to the underlying :class:`pyprland.data.models.WorkspaceData` model class."""
+        """Relays attribute access to the underlying :class:`~pyprland.data.models.WorkspaceData` data model class."""
 
         if name == 'instance':
             return self._instance
@@ -38,9 +28,9 @@ class Workspace:
 
     @property
     def monitor(self) -> 'monitors.Monitor':
-        """Returns the :class:`pyprland.components.monitor.Monitor` which this workspace is on.
+        """The :class:`~pyprland.components.monitor.Monitor` this workspace is on.
 
-        :return: The :class:`pyprland.components.monitor.Monitor` this workspace is on.
+        :return: The :class:`~pyprland.components.monitor.Monitor` this workspace is on.
         """
 
         monitor = self._instance.get_monitor_by_name(self._data.monitor_name)
@@ -50,9 +40,9 @@ class Workspace:
 
     @property
     def windows(self) -> List['windows.Window']:
-        """Returns all :class:`pyprland.components.window.Window`s on this workspace.
+        """The list of all :class:`~pyprland.components.window.Window`\\ s on this workspace.
 
-        :return: A list containing all :class:`pyprland.components.window.Window`s on this workspace.
+        :return: A list containing all :class:`~pyprland.components.window.Window`\\ s on this workspace.
         """
 
         windows = []
@@ -63,7 +53,7 @@ class Workspace:
 
     @property
     def last_window_address_as_int(self) -> int:
-        """Returns the integer representation of the window's `last_window_address` property."""
+        """Returns the integer representation of the workspace's :attr:`~pyprland.data.models.WorkspaceData.last_window_address` property."""
 
         return int(self._data.last_window_address, 16)
 

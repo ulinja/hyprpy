@@ -1,20 +1,22 @@
-"""This module provides the central `Instance` class for interfacing with Hyprland.
+"""The central :class:`Instance` class for interfacing with Hyprland.
 
 This class acts as the root for accessing other components like workspaces, windows, and monitors,
 and offers capabilities to listen to events and signals emitted by the underlying Hyprland system.
 
-For more information on how to work with these components, refer to :mod:`pyprland.components`.
-
-:seealso: :mod:`pyprland.components`
+:seealso: :ref:`Components: The Instance <guide-instance>`
 """
 
-from typing import Dict, List, Type, Union
+from typing import List, Union
 import json
 import logging
 
 from pyprland.data.models import InstanceData
-from pyprland.components import windows, workspaces, monitors
-from pyprland.utils import assertions, shell, sockets, signals
+from pyprland.components.windows import Window
+from pyprland.components.workspaces import Workspace
+from pyprland.components.monitors import Monitor
+from pyprland.utils import assertions, shell
+from pyprland.utils.sockets import CommandSocket, EventSocket
+from pyprland.utils.signals import Signal
 
 
 log = logging.getLogger(__name__)
@@ -27,44 +29,38 @@ class Instance:
     for accessing windows, workspaces, and monitors, as well as emitting signals based on events in the
     Hyprland environment.
 
-    The attributes of an instance directly map to the data attributes available in the underlying
-    :class:`pyprland.data.models.InstanceData`.
+    The data attributes of an instance directly map to the data attributes available in the underlying
+    :class:`~pyprland.data.models.InstanceData`.
 
-    For a complete guide on how to use the `Instance` class and related components,
-    refer to :mod:`pyprland.components`.
-
-    Attributes:
-        event_socket (:class:`pyprland.utils.sockets.EventSocket`): The Hyprland event socket for this instance.
-        command_socket (:class:`pyprland.utils.sockets.CommandSocket`): The Hyprland command socket for this instance.
-        signal_workspace_created (:class:`pyprland.utils.signals.Signal`): Signal emitted when a new workspace gets created.
-        signal_workspace_destroyed (:class:`pyprland.utils.signals.Signal`): Signal emitted when an existing workspace gets destroyed.
-        signal_active_workspace_changed (:class:`pyprland.utils.signals.Signal`): Signal emitted when the focus changes to another workspace.
-        signal_window_created (:class:`pyprland.utils.signals.Signal`): Signal emitted when a new window gets created.
-        signal_window_destroyed (:class:`pyprland.utils.signals.Signal`): Signal emitted when an existing window gets destroyed.
-        signal_active_window_changed (:class:`pyprland.utils.signals.Signal`): Signal emitted when the focus changes to another window.
+    :seealso: :ref:`Components: The Instance <guide-instance>`
     """
 
     def __init__(self, signature: str = shell.get_env_var_or_fail('HYPRLAND_INSTANCE_SIGNATURE')):
         self._data = InstanceData(signature=signature)
 
-        self.event_socket = sockets.EventSocket(signature)
-        self.command_socket = sockets.CommandSocket(signature)
+        #: The Hyprland event socket for this instance.
+        self.event_socket: EventSocket = EventSocket(signature)
+        #: The Hyprland command socket for this instance.
+        self.command_socket: CommandSocket = CommandSocket(signature)
 
-        self.signal_workspace_created = signals.Signal(self)
-        self.signal_workspace_destroyed = signals.Signal(self)
-        self.signal_active_workspace_changed = signals.Signal(self)
+        #: Signal emitted when a new workspace gets created.
+        self.signal_workspace_created: Signal = Signal(self)
+        #: Signal emitted when an existing workspace gets destroyed.
+        self.signal_workspace_destroyed: Signal = Signal(self)
+        #: Signal emitted when the focus changes to another workspace.
+        self.signal_active_workspace_changed: Signal = Signal(self)
 
-        self.signal_window_created = signals.Signal(self)
-        self.signal_window_destroyed = signals.Signal(self)
-        self.signal_active_window_changed = signals.Signal(self)
+        #: Signal emitted when a new window gets created.
+        self.signal_window_created: Signal = Signal(self)
+        #: Signal emitted when an existing window gets destroyed.
+        self.signal_window_destroyed: Signal = Signal(self)
+        #: Signal emitted when the focus changes to another window.
+        self.signal_active_window_changed: Signal = Signal(self)
 
 
     def __getattr__(self, name):
-        """The Instance class is a proxy for the underlying :class:`pyprland.data.models.InstanceData` class attributes.
+        """Relays attribute access to the underlying :class:`~pyprland.data.models.InstanceData` data model class."""
 
-        This is implemented by relaying attribute access to the underlying data model for all attributes
-        which are not direct attributes of the class.
-        """
         if name in [
             'event_socket', 'command_socket',
             'signal_workspace_created', 'signal_workspace_destroyed', 'signal_active_workspace_changed'
@@ -79,23 +75,23 @@ class Instance:
         return f"<Instance(signature={self.signature!r})>"
 
 
-    def get_windows(self) -> List['windows.Window']:
-        """Returns all :class:`pyprland.components.windows.Window`s currently managed by the Instance.
+    def get_windows(self) -> List['Window']:
+        """Returns all :class:`~pyprland.components.windows.Window`\\ s currently managed by the instance.
     
-        :return: A list containing :class:`pyprland.components.windows.Window`s.
+        :return: A list containing :class:`~pyprland.components.windows.Window` objects.
         """
 
         windows_data = json.loads(self.command_socket.send_command('clients', flags=['-j']))
-        return [windows.Window(window_data, self) for window_data in windows_data]
+        return [Window(window_data, self) for window_data in windows_data]
 
-    def get_window_by_address(self, address: str) -> Union['windows.Window', None]:
-        """Retrieves the :class:`pyprland.components.windows.Window` with the specified :param:`address`.
+    def get_window_by_address(self, address: str) -> Union['Window', None]:
+        """Retrieves the :class:`~pyprland.components.windows.Window` with the specified ``address``.
 
-        The :param:`address` must be a valid hexadecimal string.
+        The ``address`` must be a valid hexadecimal string.
 
-        :return: The :class:`pyprland.components.windows.Window` if it exists, or `None` otherwise.
-        :raises :class:`TypeError`: If :param:`address` is not a string.
-        :raises :class:`ValueError`: If :param:`address` is not a valid hexadecimal string.
+        :return: The :class:`~pyprland.components.windows.Window` if it exists, or ``None`` otherwise.
+        :raises: :class:`TypeError` if ``address`` is not a string.
+        :raises: :class:`ValueError` if ``address`` is not a valid hexadecimal string.
         """
 
         assertions.assert_is_hexadecimal_string(address)
@@ -104,20 +100,20 @@ class Instance:
                 return window
 
 
-    def get_workspaces(self) -> List['workspaces.Workspace']:
-        """Returns all :class:`pyprland.components.workspaces.Workspace`s currently managed by Hyprland.
+    def get_workspaces(self) -> List['Workspace']:
+        """Returns all :class:`~pyprland.components.workspaces.Workspace`\\ s currently managed by the instance.
     
-        :return: A list containing :class:`pyprland.components.workspaces.Workspace`s.
+        :return: A list containing :class:`~pyprland.components.workspaces.Workspace`\\ s.
         """
 
         workspaces_data = json.loads(self.command_socket.send_command('workspaces', flags=['-j']))
-        return [workspaces.Workspace(workspace_data, self) for workspace_data in workspaces_data]
+        return [Workspace(workspace_data, self) for workspace_data in workspaces_data]
 
-    def get_workspace_by_id(self, id: int) -> Union['workspaces.Workspace', None]:
-        """Retrieves the :class:`pyprland.components.workspaces.Workspace` with the specified :param:`id`.
+    def get_workspace_by_id(self, id: int) -> Union['Workspace', None]:
+        """Retrieves the :class:`~pyprland.components.workspaces.Workspace` with the specified ``id``.
 
-        :return: The :class:`pyprland.components.workspaces.Workspace` if it exists, or `None` otherwise.
-        :raises :class:`TypeError`: If :param:`id` is not an integer.
+        :return: The :class:`~pyprland.components.workspaces.Workspace` if it exists, or ``None`` otherwise.
+        :raises: :class:`TypeError` if ``id`` is not an integer.
         """
 
         assertions.assert_is_int(id)
@@ -125,11 +121,11 @@ class Instance:
             if workspace.id == id:
                 return workspace
 
-    def get_workspace_by_name(self, name: int) -> Union['workspaces.Workspace', None]:
-        """Retrieves the :class:`pyprland.components.workspaces.Workspace` with the specified :param:`name`.
+    def get_workspace_by_name(self, name: int) -> Union['Workspace', None]:
+        """Retrieves the :class:`~pyprland.components.workspaces.Workspace` with the specified ``name``.
 
-        :return: The :class:`pyprland.components.workspaces.Workspace` if it exists, or `None` otherwise.
-        :raises :class:`TypeError`: If :param:`name` is not a string.
+        :return: The :class:`~pyprland.components.workspaces.Workspace` if it exists, or ``None`` otherwise.
+        :raises: :class:`TypeError` if ``name`` is not a string.
         """
 
         assertions.assert_is_string(name)
@@ -138,20 +134,20 @@ class Instance:
                 return workspace
 
     
-    def get_monitors(self) -> List['monitors.Monitor']:
-        """Returns all :class:`pyprland.components.monitors.Monitor`s currently managed by Hyprland.
+    def get_monitors(self) -> List['Monitor']:
+        """Returns all :class:`~pyprland.components.monitors.Monitor`\\ s currently managed by the instance.
     
-        :return: A list containing :class:`pyprland.components.monitors.Monitor`s.
+        :return: A list containing :class:`~pyprland.components.monitors.Monitor`\\ s.
         """
 
         monitors_data = json.loads(self.command_socket.send_command('monitors', flags=['-j']))
-        return [monitors.Monitor(monitor_data, self) for monitor_data in monitors_data]
+        return [Monitor(monitor_data, self) for monitor_data in monitors_data]
 
-    def get_monitor_by_id(self, id: int) -> Union['monitors.Monitor', None]:
-        """Retrieves the :class:`pyprland.components.monitors.Monitor` with the specified :param:`id`.
+    def get_monitor_by_id(self, id: int) -> Union['Monitor', None]:
+        """Retrieves the :class:`~pyprland.components.monitors.Monitor` with the specified ``id``.
 
-        :return: The :class:`pyprland.components.monitors.Monitor` if it exists, or `None` otherwise.
-        :raises :class:`TypeError`: If :param:`id` is not an integer.
+        :return: The :class:`~pyprland.components.monitors.Monitor` if it exists, or ``None`` otherwise.
+        :raises: :class:`TypeError` if ``id`` is not an integer.
         """
 
         assertions.assert_is_int(id)
@@ -159,12 +155,12 @@ class Instance:
             if monitor.id == id:
                 return monitor
 
-    def get_monitor_by_name(self, name: str) -> Union['monitors.Monitor', None]:
-        """Retrieves the :class:`pyprland.components.monitors.Monitor` with the specified :param:`name`.
+    def get_monitor_by_name(self, name: str) -> Union['Monitor', None]:
+        """Retrieves the :class:`~pyprland.components.monitors.Monitor` with the specified ``name``.
 
-        :return: The :class:`pyprland.components.monitors.Monitor` if it exists, or `None` otherwise.
-        :raises :class:`TypeError`: If :param:`name` is not a string.
-        :raises :class:`ValueError`: If :param:`name` the empty string.
+        :return: The :class:`~pyprland.components.monitors.Monitor` if it exists, or ``None`` otherwise.
+        :raises: :class:`TypeError` if ``name`` is not a string.
+        :raises: :class:`ValueError` if ``name`` is an empty string.
         """
 
         assertions.assert_is_nonempty_string(name)
@@ -174,10 +170,12 @@ class Instance:
 
 
     def watch(self) -> None:
-        """Continuosly monitors the Hyprland event socket and emits signals when events occur.
+        """Continuosly monitors the :class:`~pyprland.utils.sockets.EventSocket` and emits appropriate :class:`~pyprland.utils.signals.Signal`\\ s when events are detected.
 
         This is a blocking method which runs indefinitely.
         Signals are continuosly emitted, as soon as Hyprland events are detected.
+
+        :seealso: :ref:`Components: Reacting to events <guide-events>`
         """
 
         def _handle_socket_data(data: str):
