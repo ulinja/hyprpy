@@ -167,6 +167,15 @@ The data can be retrieved from the `**kwargs` in our callback function:
 Building on the previous example, our desktop notification now also includes the ID of the workspace we
 switched to.
 
+We can disconnect signals as well:
+
+.. code-block:: python
+
+    instance.signal_active_workspace_changed.disconnect(workspace_changed)
+
+Aside from saving resources, disconnecting signals is useful if we only want our
+callback to get triggered a few times.
+
 The following table shows a list of available signals, and the data they send to the callback function:
 
 .. list-table:: Instance Signals

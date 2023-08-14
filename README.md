@@ -1,16 +1,16 @@
 # Hyprpy
 
-[Hyprpy](https://github.com/ulinja/hyprpy) provides python bindings for the [Hyprland](https://hyprland.org/) wayland compositor.
+[Hyprpy](https://github.com/ulinja/hyprpy) is a library that provides python bindings for the [Hyprland](https://hyprland.org/) wayland compositor.
 
 With Hyprpy you can very easily retrieve information about windows, workspaces and monitors
 in a running Hyprland instance.
-
 It also offers an event monitor, allowing you to write your own callback functions which
 execute in response to Hyprland events.
 
 Hyprpy uses unix sockets to communicate with Hyprland, making it **fast** and **efficient**.
 
-The library is fully typed and very well documented, [check out the documentation](https://hyprpy.docs.lobbes.dev).
+Please [check out the documentation](https://hyprpy.lobbes.dev)!
+Hyprpy is fully typed and extensively documented. Happy hacking :sunglasses:
 
 ## Quickstart
 
@@ -38,7 +38,7 @@ for window in windows:
 
 # Check if workspace number 5 currently exists
 # and which windows are on it
-workspace = Hyprland.get_workspace_by_id(5)
+workspace = instance.get_workspace_by_id(5)
 if workspace:
     for window in workspace.windows:
         print(f"{window.address}: {window.title} [{window.wm_class}]")
@@ -52,7 +52,7 @@ if monitor:
 
 # Get all windows currently on the special workspace
 special_workspace = instance.get_workspace_by_name("special")
-if special_workspace is not None:
+if special_workspace:
     special_windows = special_workspace.windows
     for window in special_windows:
         print(window.title)

@@ -22,7 +22,7 @@ class EnvironmentException(Exception):
 def run_or_fail(command: list[str]) -> Tuple[str, str]:
     """Runs the specified ``command`` successfully and returns its output, or raises an exception.
 
-    Each command token must be an item in the ``command`` list. Each tokens is treated as a contiguous
+    Each command token must be an item in the ``command`` list. Each token is treated as a contiguous
     string by the shell (even if it contains whitespace).
 
     Example:
