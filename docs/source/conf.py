@@ -32,7 +32,7 @@ html_static_path = ['_static']
 html_sidebars = {'**': ['util/searchbox.html', 'util/sidetoc.html']}
 html_theme_options = {
   "external_links": [
-      ("Github", "https://github.com/ulinja/hypry"),
+      ("Github", "https://github.com/ulinja/hyprpy"),
       ("Contact", "https://lobbes.dev/contact")
   ]
 }
