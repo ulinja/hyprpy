@@ -1,67 +1,82 @@
 # Pyprland
 
-Pyprland is a library providing python bindings for the [Hyprland](https://hyprland.org/) wayland compositor.
+Python bindings for the [Hyprland](https://hyprland.org/) wayland compositor.
 
-Currently, the interface to Hyprland is read-only: you can get information about windows, workspaces and so on.
-I will add IPC functionality soon, used to *send commands to*/*listen to events from* Hyprland via unix sockets.
+With Pyprland you can very easily retrieve information about windows, workspaces and monitors
+in a running Hyprland instance.
+
+It also offers an event monitor, allowing you to write your own callback functions which
+execute in response to Hyprland events.
+
+Pyprland uses unix sockets to communicate with Hyprland, making it **fast** and **efficient**.
+
+The library is fully typed and very well documented, [check out the documentation](https://pyprland.docs.lobbes.dev).
 
 ## Quickstart
 
-**Dependencies**:
-- Python 3.7 or later
-- [Pydantic 2.1](https://docs.pydantic.dev/2.1/)
-
-If you want to use pip:
+### Installation
 
 ```bash
-pip install -r requirements.txt
+pip install pyprland
 ```
-
-> I'll add a proper python package later, when the project is a bit more mature (and tested.)
 
 ### Usage examples
 
 ```python
 from pyprland import Hyprland
 
+instance = Hyprland()
 
-# Fetch all windows:
-windows = Hyprland.get_windows()
+
+# Fetch windows and display information:
+windows = instance.get_windows()
 for window in windows:
     print(window.wm_class)
+    print(window.width)
+    print(window.position_x)
 
 
-# Retrieve all workspaces:
-workspaces = Hyprland.get_workspaces()
-for workspace in workspaces:
-    print(workspace)
+# Check if workspace number 5 currently exists
+# and which windows are on it
+workspace = Hyprland.get_workspace_by_id(5)
+if workspace:
+    for window in workspace.windows:
+        print(f"{window.address}: {window.title} [{window.wm_class}]")
 
 
-# Get all managed monitors:
-monitors = Hyprland.get_monitors()
-for monitor in monitors:
-    print(monitor)
+# Get the resolution of the first monitor
+monitor = instance.get_monitor_by_id(0)
+if monitor:
+    print(f"{monitor.width} x {monitor.height}")
 
 
 # Get all windows currently on the special workspace
-special_workspace = Hyprland.get_workspace_by_name("special")
-# alternatively: special_workspace = Hyprland.get_workspace_by_id(-99)
+special_workspace = instance.get_workspace_by_name("special")
 if special_workspace is not None:
     special_windows = special_workspace.windows
     for window in special_windows:
         print(window.title)
 
 
-# Check whether workspace number 5 currently exists
-workspace = Hyprland.get_workspace_by_id(5)
-if workspace:
-    return true
+# Show a desktop notification every time we switch to workspace 6
+from pyprland.utils.shell import run_or_fail
 
+def workspace_changed(sender, **kwargs):
+    current_workspace = kwargs.get('active_workspace')
+    if current_workspace.id == 6:
+        run_or_fail(["notify-send", "We are on workspace 6."])
 
-# Get the resolution of the first monitor
-monitor = Hyprland.get_monitor_by_id(0)
-if monitor:
-    print(f"{monitor.width} x {monitor.height}")
+instance.signal_active_workspace_changed.connect(workspace_changed)
+instance.watch()
 ```
 
-Pyprland is thoroughly documented. Take a peek at the [./src/pyprland/hyprland.py](hyprland) and [./src/pyprland/models.py](models) modules for more information.
+## Development
+
+Pyprland is in active development! Please file an issue if you find any bugs or have a feature request.
+
+Your contributions are greatly appreciated.
+
+### Roadmap
+
+- [ ] dispatchers for components
+- [ ] ???

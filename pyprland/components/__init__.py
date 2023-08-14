@@ -117,20 +117,20 @@ we can execute python code dynamically, in response to changes in Hyprland's sta
 
 .. code-block:: python
 
-   from pyprland import Hyprland
-   from pyprland.utils.shell import run_or_fail
+    from pyprland import Hyprland
+    from pyprland.utils.shell import run_or_fail
 
-   instance = Hyprland()
+    instance = Hyprland()
 
-   # Define a callback function
-   def workspace_changed(sender, **kwargs):
+    # Define a callback function
+    def workspace_changed(sender, **kwargs):
        run_or_fail(["notify-send", "Workspace Changed"])
-    
-   # Connect the callback function to the signal
-   instance.signal_active_workspace_changed.connect(workspace_changed)
 
-   # Start watching for hyprland events
-   instance.watch()
+    # Connect the callback function to the signal
+    instance.signal_active_workspace_changed.connect(workspace_changed)
+
+    # Start watching for hyprland events
+    instance.watch()
 
 In this example, we defined our own callback function called ``workspace_changed``.
 The function executes a shell command, ``notify-send``, with ``"Workspace Changed"`` as an argument.
@@ -151,18 +151,18 @@ The data can be retrieved from the `**kwargs` in our callback function:
 
 .. code-block:: python
 
-   from pyprland import Hyprland
-   from pyprland.utils.shell import run_or_fail
+    from pyprland import Hyprland
+    from pyprland.utils.shell import run_or_fail
 
-   instance = Hyprland()
+    instance = Hyprland()
 
-   def workspace_changed(sender, **kwargs):
+    def workspace_changed(sender, **kwargs):
        # Retrieve the newly active workspace from the signal's data
        active_workspace = kwargs.get('active_workspace')
        run_or_fail(["notify-send", "Workspace Changed", f"Workspace is now {active_workspace.id}"])
-    
-   instance.signal_active_workspace_changed.connect(workspace_changed)
-   instance.watch()
+
+    instance.signal_active_workspace_changed.connect(workspace_changed)
+    instance.watch()
 
 Building on the previous example, our desktop notification now also includes the ID of the workspace we
 switched to.
