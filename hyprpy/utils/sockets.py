@@ -13,14 +13,16 @@ Examples:
 
 .. code-block:: python
 
-    from hyprpy.utils.sockets import EventSocket, CommandSocket
+    from hyprpy import Hyprland
+
+    instance = Hyprland()
 
     # For command socket
-    cs = CommandSocket(signature="<hyprland-instance-signature>")
+    cs = instance.command_socket
     response = cs.send_command("dispatch", flags=["--single-instance"], args=["exec", "kitty"])
 
     # For event socket
-    es = EventSocket(signature="<hyprland-instance-signature>")
+    es = instance.event_socket
     s = es.get_socket() # returns a connected socket object
     while True:
         bytes = s.recv(4096)
@@ -63,7 +65,8 @@ class EventSocket(AbstractSocket):
     windows or workspaces being created or destroyed.
     """
 
-    conncection_timeout_seconds: float = 1.0
+    #: Maximum time in seconds to wait for a socket connection
+    connection_timeout_seconds: float = 1.0
 
     def __init__(self, signature: str):
         super().__init__(signature)
@@ -82,7 +85,7 @@ class EventSocket(AbstractSocket):
         """
 
         s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-        s.settimeout(self.conncection_timeout_seconds)
+        s.settimeout(self.connection_timeout_seconds)
         try:
             s.connect(str(self.path_to_socket))
             s.settimeout(None)
@@ -99,7 +102,8 @@ class CommandSocket(AbstractSocket):
     a wide range of commands, as explained in `the Hyprland wiki <https://wiki.hyprland.org/Configuring/Using-hyprctl>`_.
     """
 
-    conncection_timeout_seconds: float = 1.0
+    #: Maximum time in seconds to wait for socket connection and command response
+    connection_timeout_seconds: float = 1.0
 
     def __init__(self, signature: str):
         super().__init__(signature)
@@ -139,7 +143,7 @@ class CommandSocket(AbstractSocket):
             message += " " + " ".join(args)
 
         with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
-            s.settimeout(self.conncection_timeout_seconds)
+            s.settimeout(self.connection_timeout_seconds)
             try:
                 s.connect(str(self.path_to_socket))
                 s.sendall(message.encode('utf-8'))
