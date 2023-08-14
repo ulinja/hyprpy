@@ -63,7 +63,7 @@ class EventSocket(AbstractSocket):
     windows or workspaces being created or destroyed.
     """
 
-    conncection_timeout_seconds: float = 1.0
+    connection_timeout_seconds: float = 1.0
 
     def __init__(self, signature: str):
         super().__init__(signature)
@@ -82,7 +82,7 @@ class EventSocket(AbstractSocket):
         """
 
         s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-        s.settimeout(self.conncection_timeout_seconds)
+        s.settimeout(self.connection_timeout_seconds)
         try:
             s.connect(str(self.path_to_socket))
             s.settimeout(None)
@@ -99,7 +99,7 @@ class CommandSocket(AbstractSocket):
     a wide range of commands, as explained in `the Hyprland wiki <https://wiki.hyprland.org/Configuring/Using-hyprctl>`_.
     """
 
-    conncection_timeout_seconds: float = 1.0
+    connection_timeout_seconds: float = 1.0
 
     def __init__(self, signature: str):
         super().__init__(signature)
@@ -139,7 +139,7 @@ class CommandSocket(AbstractSocket):
             message += " " + " ".join(args)
 
         with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
-            s.settimeout(self.conncection_timeout_seconds)
+            s.settimeout(self.connection_timeout_seconds)
             try:
                 s.connect(str(self.path_to_socket))
                 s.sendall(message.encode('utf-8'))
