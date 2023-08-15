@@ -26,10 +26,7 @@ class Monitor:
 
     @property
     def workspaces(self) -> List['workspaces.Workspace']:
-        """Returns all :class:`~hyprpy.components.workspace.Workspace`\\ s on this monitor.
-
-        :return: A list containing all :class:`~hyprpy.components.workspace.Workspace`\\ s on this monitor.
-        """
+        """All :class:`~hyprpy.components.workspace.Workspace`\\ s located on this monitor."""
 
         workspaces = []
         for workspace in self._instance.get_workspaces():

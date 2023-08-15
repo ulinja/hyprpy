@@ -220,7 +220,13 @@ class Instance:
                     active_workspace = self.get_workspace_by_id(int(event_data))
                     signal.emit(active_workspace=active_workspace)
 
-        with self.event_socket.get_socket() as s:
+
+        try:
+            self.event_socket.connect()
+
             while True:
-                data = s.recv(4096).decode('utf-8')
+                self.event_socket.wait()
+                data = self.event_socket.read()
                 _handle_socket_data(data)
+        finally:
+            self.event_socket.close()

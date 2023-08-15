@@ -26,10 +26,7 @@ class Window:
     
     @property
     def workspace(self) -> 'workspaces.Workspace':
-        """The :class:`~hyprpy.components.workspace.Workspace` which this window is in.
-
-        :return: The :class:`~hyprpy.components.workspace.Workspace` this window is on.
-        """
+        """The :class:`~hyprpy.components.workspace.Workspace` which this window is in."""
 
         workspace = self._instance.get_workspace_by_id(self._data.workspace_id)
         if not workspace:
@@ -38,7 +35,7 @@ class Window:
 
     @property
     def address_as_int(self) -> int:
-        """Returns the integer representation of the window's :attr:`~hyprpy.data.models.WindowData.address` property."""
+        """The integer representation of the window's :attr:`~hyprpy.data.models.WindowData.address` property."""
 
         return int(self._data.address, 16)
 

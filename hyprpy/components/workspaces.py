@@ -28,10 +28,7 @@ class Workspace:
 
     @property
     def monitor(self) -> 'monitors.Monitor':
-        """The :class:`~hyprpy.components.monitor.Monitor` this workspace is on.
-
-        :return: The :class:`~hyprpy.components.monitor.Monitor` this workspace is on.
-        """
+        """The :class:`~hyprpy.components.monitor.Monitor` this workspace is on."""
 
         monitor = self._instance.get_monitor_by_name(self._data.monitor_name)
         if not monitor:
@@ -40,10 +37,7 @@ class Workspace:
 
     @property
     def windows(self) -> List['windows.Window']:
-        """The list of all :class:`~hyprpy.components.window.Window`\\ s on this workspace.
-
-        :return: A list containing all :class:`~hyprpy.components.window.Window`\\ s on this workspace.
-        """
+        """The list of all :class:`~hyprpy.components.window.Window`\\ s on this workspace."""
 
         windows = []
         for window in self._instance.get_windows():
@@ -53,7 +47,7 @@ class Workspace:
 
     @property
     def last_window_address_as_int(self) -> int:
-        """Returns the integer representation of the workspace's :attr:`~hyprpy.data.models.WorkspaceData.last_window_address` property."""
+        """The integer representation of the workspace's :attr:`~hyprpy.data.models.WorkspaceData.last_window_address` property."""
 
         return int(self._data.last_window_address, 16)
 
