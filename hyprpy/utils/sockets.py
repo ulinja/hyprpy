@@ -147,7 +147,13 @@ class CommandSocket(AbstractSocket):
             try:
                 s.connect(str(self.path_to_socket))
                 s.sendall(message.encode('utf-8'))
-                return s.recv(4096).decode('utf-8')
+                bytes = bytearray()
+                while True:
+                    msg = s.recv(4096)
+                    if msg:
+                        bytes.extend(msg)
+                    else:
+                        return bytes.decode('utf-8')
             except TimeoutError as e:
                 log.error(f"Failed to send command: {command=!r} {flags=} {args=}")
                 raise SocketError(f"Socket timed out: {e}")
