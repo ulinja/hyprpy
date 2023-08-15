@@ -84,6 +84,15 @@ class Instance:
             if window.address_as_int == int(address, 16):
                 return window
 
+    def get_active_window(self) -> 'Window':
+        """Returns the currently active :class:`~hyprpy.components.windows.Window`.
+    
+        :return: The currently active :class:`~hyprpy.components.windows.Window`.
+        """
+
+        window_data = json.loads(self.command_socket.send_command('activewindow', flags=['-j']))
+        return Window(window_data, self)
+
 
     def get_workspaces(self) -> List['Workspace']:
         """Returns all :class:`~hyprpy.components.workspaces.Workspace`\\ s currently managed by the instance.
@@ -105,6 +114,15 @@ class Instance:
         for workspace in self.get_workspaces():
             if workspace.id == id:
                 return workspace
+
+    def get_active_workspace(self) -> 'Workspace':
+        """Retrieves the currently active :class:`~hyprpy.components.workspaces.Workspace`.
+
+        :return: The currently active :class:`~hyprpy.components.workspaces.Workspace`.
+        """
+
+        workspace_data = json.loads(self.command_socket.send_command('activeworkspace', flags=['-j']))
+        return Workspace(workspace_data, self)
 
     def get_workspace_by_name(self, name: int) -> Union['Workspace', None]:
         """Retrieves the :class:`~hyprpy.components.workspaces.Workspace` with the specified ``name``.

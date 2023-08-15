@@ -49,7 +49,7 @@ Reading component data
 
 Now that we have our instance, we can query it for components.
 Components have *data attributes*, which allow us to access information about them.
-Let's grab the first window we can find and print some information about it:
+Let's grab the currently active window and print some information about it:
 
 .. code-block:: python
 
@@ -57,17 +57,16 @@ Let's grab the first window we can find and print some information about it:
 
     instance = Hyprland()
 
-    window = instance.get_windows()[0]
+    window = instance.get_active_window()
     print(window)
     # Output: "<Window(address='0x1981f40', wm_class='kitty', title='python ~/d/p/src')>"
     print(window.width)
     # Output: 1258
     print(window.wm_class)
-    # Output: 'firefox'
+    # Output: 'kitty'
 
-Here, we queried the instance for all windows, and just grabbed the first one for the sake of demonstration.
-We printed the window's ``width`` and ``wm_class`` data attributes, which tell us the current
-width and display class of the window.
+Here, we queried the instance for the active window, and printed the window's ``width``
+and ``wm_class`` data attributes, which tell us the current width and display class of the window.
 
 Windows, workspaces and monitors have a wide range of useful data attributes.
 For a complete list of data attributes for each type of component, refer to the
@@ -86,12 +85,18 @@ Components provide intuitive access to their parent and/or child components:
     from hyprpy import Hyprland
 
     instance = Hyprland()
-    window = instance.get_windows()[0]
+    workspace = instance.get_active_workspace()
 
-    print(window.workspace)
-    # Output: "<Workspace(id=1, name='1')>"
-    print(window.workspace.window_count)
-    # Output: 1
+    for window in workspace.windows:
+        print(window.address)
+
+    # Output: '0x2642190'
+    #         '0x1df25a0'
+    #         '0x263ae70'
+
+    print(workspace.monitor.name)
+    # Output: 'HDMI-1'
+    
 
 For a given :class:`~hyprpy.components.windows.Window`, we can access the :class:`~hyprpy.components.workspaces.Workspace`
 it is on through its :attr:`~hyprpy.components.windows.Window.workspace` property.

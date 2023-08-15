@@ -28,20 +28,17 @@ from hyprpy import Hyprland
 instance = Hyprland()
 
 
-# Fetch windows and display information:
-windows = instance.get_windows()
-for window in windows:
-    print(window.wm_class)
-    print(window.width)
-    print(window.position_x)
+# Fetch active window and display information:
+window = instance.get_active_window()
+print(window.wm_class)
+print(window.width)
+print(window.position_x)
 
 
-# Check if workspace number 5 currently exists
-# and which windows are on it
-workspace = instance.get_workspace_by_id(5)
-if workspace:
-    for window in workspace.windows:
-        print(f"{window.address}: {window.title} [{window.wm_class}]")
+# Print information about the windows on the active workspace
+workspace = instance.get_active_workspace()
+for window in workspace.windows:
+    print(f"{window.address}: {window.title} [{window.wm_class}]")
 
 
 # Get the resolution of the first monitor
