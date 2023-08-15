@@ -7,6 +7,7 @@ Some general notes and guidelines.
 What to do when creating a new release:
 
 - [ ] adjust version in `setup.cfg`
+- [ ] update readme if necessary
 - [ ] rebuild python package: `python -m build`
 - [ ] edit `CHANGELOG.md`:
     - [ ] add release notes for version (at the top)

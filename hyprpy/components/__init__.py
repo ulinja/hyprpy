@@ -71,8 +71,7 @@ width and display class of the window.
 
 Windows, workspaces and monitors have a wide range of useful data attributes.
 For a complete list of data attributes for each type of component, refer to the
-:ref:`data model class API <api-data-model-classes>`, which defines the underlying data model
-for Hyprpy components.
+:ref:`Component API <api-components>`.
 
 .. note:: Component data attributes are **read-only**.
     Writing new values into them will not raise an exception, but will also have no effect on Hyprland's actual state.

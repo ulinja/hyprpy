@@ -1,5 +1,5 @@
 Hyprpy
-======
+------
 
 `Hyprpy <https://github.com/ulinja/hyprpy>`_ is a library which provides python bindings
 for the `Hyprland <https://hyprland.org/>`_ window compositor.
@@ -10,8 +10,10 @@ Hyprpy communicates with Hyprland using unix sockets, making it *fast* and *effi
 It also provides a versatile and resource-friendly signalling interface. With it,
 you can write python callbacks for Hyprland events.
 
-Installation
-------------
+.. attention:: Check out the :ref:`guide <guide>` for a demonstration of Hyprpy.
+
+Getting started
+---------------
 
 To get started, install Hyprpy:
 
@@ -19,16 +21,17 @@ To get started, install Hyprpy:
 
     pip install hyprpy
 
-and follow along with the :ref:`Components guide <guide>`.
-
-If you're feeling brave, you can dive straight into the extensive :ref:`API reference <api>`.
-
+and follow along with the :ref:`guide <guide>`, or dive straight into the extensive :ref:`API reference <api>`
+if you're feeling adventurous!
 
 .. toctree::
    :maxdepth: 2
 
    hyprpy.components
-   hyprpy.api-reference
+   hyprpy.api-reference.components
+   hyprpy.api-reference.utils
+   hyprpy.api-reference.data
+
 
 Indices and tables
 ==================

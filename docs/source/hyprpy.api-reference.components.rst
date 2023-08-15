@@ -7,7 +7,7 @@ This is the component API reference.
 Here you will find the nitty-gritty details about Hyprpy component objects.
 
 For a more general overview on how to use components, take a look at the
-:mod:`~hyprpy.components` guide.
+:ref:`Components guide <guide>`.
 
 Instance
 --------

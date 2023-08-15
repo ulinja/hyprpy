@@ -2,8 +2,6 @@
 
 This class acts as the root for accessing other components like workspaces, windows, and monitors,
 and offers capabilities to listen to events and signals emitted by the underlying Hyprland system.
-
-:seealso: :ref:`Components: The Instance <guide-instance>`
 """
 
 from typing import List, Union
@@ -29,14 +27,14 @@ class Instance:
     for accessing windows, workspaces, and monitors, as well as emitting signals based on events in the
     Hyprland environment.
 
-    The data attributes of an instance directly map to the data attributes available in the underlying
-    :class:`~hyprpy.data.models.InstanceData`.
-
     :seealso: :ref:`Components: The Instance <guide-instance>`
     """
 
     def __init__(self, signature: str = shell.get_env_var_or_fail('HYPRLAND_INSTANCE_SIGNATURE')):
-        self._data = InstanceData(signature=signature)
+        data = InstanceData(signature=signature)
+
+        #: `Instance signature <https://wiki.hyprland.org/IPC/#hyprland-instance-signature-his>`_ of the Hyprland instance.
+        self.signature: str = data.signature
 
         #: The Hyprland event socket for this instance.
         self.event_socket: EventSocket = EventSocket(signature)
@@ -56,19 +54,6 @@ class Instance:
         self.signal_window_destroyed: Signal = Signal(self)
         #: Signal emitted when the focus changes to another window.
         self.signal_active_window_changed: Signal = Signal(self)
-
-
-    def __getattr__(self, name):
-        """Relays attribute access to the underlying :class:`~hyprpy.data.models.InstanceData` data model class."""
-
-        if name in [
-            'event_socket', 'command_socket',
-            'signal_workspace_created', 'signal_workspace_destroyed', 'signal_active_workspace_changed'
-            'signal_window_created', 'signal_window_destroyed', 'signal_active_window_changed'
-        ]:
-            return getattr(self, name)
-        else:
-            return getattr(self._data, name)
 
 
     def __repr__(self):
