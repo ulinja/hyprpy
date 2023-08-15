@@ -26,6 +26,17 @@ def assert_is_int(value: Any) -> None:
         raise TypeError(f"Expected the input to be an integer but got a '{type(value)}'.")
 
 
+def assert_is_float_or_int(value: Any) -> None:
+    """Raises an exception if ``value`` is not a floating point number or an integer.
+
+    :param value: The input to check.
+    :raises: :class:`TypeError` if ``value`` is not a floating point number or an integer.
+    """
+
+    if not (isinstance(value, int) or isinstance(value, float)):
+        raise TypeError(f"Expected the input to be an integer or float, but got a '{type(value)}'.")
+
+
 def assert_is_string(value: Any) -> None:
     """Raises an exception if ``value`` is not a string.
 

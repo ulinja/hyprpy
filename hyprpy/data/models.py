@@ -1,18 +1,11 @@
 """Data classes used for parsing, validating and storing JSON output received
 from the Hyprland command socket.
 
-The classes here store data about the various Hyprpy components.
-
-Each component class in the :ref:`Components API <api-components>` proxies attribute access to
-its respective data model class.
-
-:seealso: :ref:`Components: Reading component data <guide-component-data>`
-
 Classes:
-    - :class:`WindowData`: Holds data specific to a Hyprland window.
-    - :class:`WorkspaceData`: Represents data about a Hyprland workspace.
-    - :class:`MonitorData`: Stores information about a monitor in the Hyprland environment.
-    - :class:`InstanceData`: Contains data about a particular Hyprland instance.
+    - :class:`WindowData`: data for Hyprland windows.
+    - :class:`WorkspaceData`: data for Hyprland workspaces.
+    - :class:`MonitorData`: data for Hyprland monitors.
+    - :class:`InstanceData`: data for Hyprland instances.
 """
 
 from typing import List
@@ -23,7 +16,7 @@ from hyprpy.data.validators import HexString, NonEmptyString
 
 
 class WindowData(BaseModel):
-    """Stores data about a Hyprland window."""
+    """Deserialization and validation of ``hyprctl`` window (client) data."""
 
     #: String representation of a hexadecimal number, unique identifier for the window.
     address: HexString
@@ -70,7 +63,7 @@ class WindowData(BaseModel):
 
 
 class WorkspaceData(BaseModel):
-    """Stores data about a Hyprland workspace."""
+    """Deserialization and validation of ``hyprctl`` workspace data."""
 
     #: Numeric ID of the workspace.
     id: int
@@ -89,7 +82,7 @@ class WorkspaceData(BaseModel):
 
 
 class MonitorData(BaseModel):
-    """Stores data about a Hyprland monitor."""
+    """Deserialization and validation of ``hyprctl`` monitor data."""
 
     #: Numeric ID of the monitor.
     id: int
@@ -132,7 +125,7 @@ class MonitorData(BaseModel):
 
 
 class InstanceData(BaseModel):
-    """Stores data about a Hyprland instance."""
+    """Deserialization and validation of ``hyprctl`` instance data."""
 
     #: `Instance signature <https://wiki.hyprland.org/IPC/#hyprland-instance-signature-his>`_ of the Hyprland instance.
     signature: NonEmptyString

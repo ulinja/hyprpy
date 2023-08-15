@@ -1,10 +1,7 @@
 .. _api-data:
 
-Data API
-========
-
-This is the component data reference, where you will all the available data attributes for the different
-components.
+Data Models
+===========
 
 Hyprpy retrieves data about Hyprland components by talking to Hyprland's :class:`~hyprpy.utils.sockets.CommandSocket`.
 The data retrieved from the socket arrives as JSON.
