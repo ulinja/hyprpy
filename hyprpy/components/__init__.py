@@ -191,22 +191,22 @@ The following table shows a list of available signals, and the data they send to
      - Signal Data
    * - A workspace was created
      - :attr:`~hyprpy.components.instances.Instance.signal_workspace_created`
-     - ``new_workspace``: the newly created :class:`~hyprpy.components.workspaces.Workspace`
+     - ``created_workspace_id``: the :attr:`~hyprpy.components.workspaces.Workspace.id` of the created workspace
    * - A workspace was destroyed
      - :attr:`~hyprpy.components.instances.Instance.signal_workspace_destroyed`
-     - ``destroyed_workspace_id``: ID of the destroyed workspace (integer)
+     - ``destroyed_workspace_id``: the :attr:`~hyprpy.components.workspaces.Workspace.id` of the destroyed workspace
    * - The active workspace changed
      - :attr:`~hyprpy.components.instances.Instance.signal_active_workspace_changed`
-     - ``active_workspace``: the now active :class:`~hyprpy.components.workspaces.Workspace`
+     - ``active_workspace_id``: the :attr:`~hyprpy.components.workspaces.Workspace.id` of the now active workspace
    * - A window was created
      - :attr:`~hyprpy.components.instances.Instance.signal_window_created`
-     - ``new_window``: the newly created :class:`~hyprpy.components.windows.Window`
+     - ``created_window_address``: the :attr:`~hyprpy.components.windows.Window.address` of the newly created window
    * - A window was destroyed
      - :attr:`~hyprpy.components.instances.Instance.signal_window_destroyed`
-     - ``destroyed_window_address``: hexadecimal address of the destroyed window
+     - ``destroyed_window_address``: the :attr:`~hyprpy.components.windows.Window.address` of the destroyed window
    * - The active window changed
      - :attr:`~hyprpy.components.instances.Instance.signal_active_window_changed`
-     - ``active_window``: the now active :class:`~hyprpy.components.windows.Window`
+     - ``active_window_address``: the :attr:`~hyprpy.components.windows.Window.address` of the now active window
 
 
 .. note:: The :meth:`~hyprpy.components.instances.Instance.watch` method is a blocking operation that runs 

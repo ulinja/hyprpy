@@ -206,22 +206,18 @@ class Instance:
 
                 # We send specific data along with the signal, depending on the event
                 if event_name == 'openwindow':
-                    new_window = self.get_window_by_address(event_data.split(',')[0])
-                    signal.emit(new_window=new_window)
+                    signal.emit(created_window_address=event_data.split(',')[0])
                 elif event_name == 'closewindow':
                     signal.emit(destroyed_window_address=event_data)
                 elif event_name == 'activewindowv2':
-                    active_window = None if event_data == ',' else self.get_window_by_address(event_data)
-                    signal.emit(active_window=active_window)
+                    signal.emit(active_window_address=(None if event_data == ',' else event_data))
 
                 elif event_name == 'createworkspace':
-                    new_workspace = self.get_workspace_by_id(int(event_data))
-                    signal.emit(new_workspace=new_workspace)
+                    signal.emit(created_workspace_id=(int(event_data) if event_data != 'special' else -99))
                 elif event_name == 'destroyworkspace':
-                    signal.emit(destroyed_workspace_id=event_data)
+                    signal.emit(destroyed_workspace_id=(int(event_data) if event_data != 'special' else -99))
                 elif event_name == 'workspace':
-                    active_workspace = self.get_workspace_by_id(int(event_data))
-                    signal.emit(active_workspace=active_workspace)
+                    signal.emit(active_workspace_id=(int(event_data) if event_data != 'special' else -99))
 
 
         try:
