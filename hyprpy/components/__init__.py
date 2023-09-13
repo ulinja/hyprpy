@@ -148,7 +148,7 @@ The :meth:`~hyprpy.components.instances.Instance.watch` method runs indefinitely
 function whenever the underlying signal is emitted.
 In this case, we get a desktop notification whenever we switch to another workspace.
 
-.. attention:: The signal callback function signature **must** be ``(sender, **kwargs)``.
+.. attention:: The callback's function signature **must** be ``(sender, **kwargs)``.
 
 Dispatched signals include some data about the event which triggered them.
 The data can be retrieved from the `**kwargs` in our callback function:
@@ -162,8 +162,8 @@ The data can be retrieved from the `**kwargs` in our callback function:
 
     def workspace_changed(sender, **kwargs):
        # Retrieve the newly active workspace from the signal's data
-       active_workspace = kwargs.get('active_workspace')
-       run_or_fail(["notify-send", "Workspace Changed", f"Workspace is now {active_workspace.id}"])
+       active_workspace_id = kwargs.get('active_workspace_id')
+       run_or_fail(["notify-send", "Workspace Changed", f"Workspace is now {active_workspace_id}"])
 
     instance.signal_active_workspace_changed.connect(workspace_changed)
     instance.watch()
