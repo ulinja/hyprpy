@@ -59,8 +59,8 @@ if special_workspace:
 from hyprpy.utils.shell import run_or_fail
 
 def workspace_changed(sender, **kwargs):
-    current_workspace = kwargs.get('active_workspace')
-    if current_workspace.id == 6:
+    current_workspace_id = kwargs.get('active_workspace_id')
+    if current_workspace_id == 6:
         run_or_fail(["notify-send", "We are on workspace 6."])
 
 instance.signal_active_workspace_changed.connect(workspace_changed)
