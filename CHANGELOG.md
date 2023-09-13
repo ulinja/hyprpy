@@ -3,6 +3,13 @@
 All notable changes to this hyprpy will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.1.5] - 2023-09-13
+
+### Fixed
+
+- Broken link to documentation on PyPi repaired
+- Incorrect example code in documentation recitified
+
 ## [0.1.4] - 2023-08-14
 
 ### Changed
@@ -58,6 +65,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+[0.1.5]: https://github.com/ulinja/hyprpy/compare/v0.1.4...v0.1.5
 [0.1.4]: https://github.com/ulinja/hyprpy/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/ulinja/hyprpy/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/ulinja/hyprpy/compare/v0.1.1...v0.1.2

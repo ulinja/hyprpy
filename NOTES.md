@@ -17,5 +17,5 @@ What to do when creating a new release:
 - [ ] tag commit: `git tag -a 'vX.X.X' -m "Version X.X.X <summary>"`
 - [ ] push to Github: `git push origin --tags`
 - [ ] add Github release and upload build files
-- [ ] push package to pypi: `twine upload dist/<new-version>*`
+- [ ] push package to pypi: `twine upload dist/hyprpy-<new-version>*`
 - [ ] rebuild and redeploy docs if necessary
