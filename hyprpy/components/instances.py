@@ -59,6 +59,18 @@ class Instance:
     def __repr__(self):
         return f"<Instance(signature={self.signature!r})>"
 
+    def dispatch(self, arguments: str) -> str:
+        """Runs a dispatcher with the given arguments and returns either `None` on success or a string indicating errors.
+
+        :param arguments: A string containing arguments for the command.
+        :type arguments: str
+        :return: `None` if the command succeeded, otherwise a string indicating errors.
+        :rtype: str or None
+        """
+        dispatch_response = self.command_socket.send_command('dispatch', flags=['-j'], args=arguments)
+        dispatch_error = dispatch_response if dispatch_response != 'ok' else None
+        return dispatch_error
+
 
     def get_windows(self) -> List['Window']:
         """Returns all :class:`~hyprpy.components.windows.Window`\\ s currently managed by the instance.
