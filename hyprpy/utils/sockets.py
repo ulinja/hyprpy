@@ -54,7 +54,7 @@ class AbstractSocket(ABC):
     Upon initialization, the underlying :class:`~socket.socket` object is *not* created.
     Users must explicitly call :meth:`~AbstractSocket.connect` prior
     to using the :class:`~socket.socket`, and should call :meth:`~AbstractSocket.close`
-    aftwerwards.
+    afterwards.
     """
 
     def __init__(self, signature: str):
@@ -174,9 +174,9 @@ class EventSocket(AbstractSocket):
     windows or workspaces being created or destroyed.
     """
 
-    def __init__(self, signature: str):
+    def __init__(self, signature: str, runtime_dir: str):
         super().__init__(signature)
-        self._path_to_socket = PosixPath(f"/tmp/hypr/{self._signature}/.socket2.sock")
+        self._path_to_socket = PosixPath(f"{runtime_dir}/{self._signature}/.socket2.sock")
         if not self._path_to_socket.is_socket():
             raise FileNotFoundError(f"No socket found at {self._path_to_socket!r}.")
 
@@ -188,9 +188,9 @@ class CommandSocket(AbstractSocket):
     a wide range of commands, as explained in `the Hyprland wiki <https://wiki.hyprland.org/Configuring/Using-hyprctl>`_.
     """
 
-    def __init__(self, signature: str):
+    def __init__(self, signature: str, runtime_dir: str):
         super().__init__(signature)
-        self._path_to_socket = PosixPath(f"/tmp/hypr/{self._signature}/.socket.sock")
+        self._path_to_socket = PosixPath(f"{runtime_dir}/{self._signature}/.socket.sock")
         if not self._path_to_socket.is_socket():
             raise FileNotFoundError(f"No socket found at {self._path_to_socket!r}.")
 
