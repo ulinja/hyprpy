@@ -59,10 +59,35 @@ class Instance:
     def __repr__(self):
         return f"<Instance(signature={self.signature!r})>"
 
+    def dispatch(self, arguments: list[str]) -> Union[str, None]:
+        """Runs a generic dispatcher command with the given arguments and returns ``None`` on success or a string indicating errors.
+
+        See the `Hyprland Wiki <https://wiki.hyprland.org/Configuring/Dispatchers/>`_ for a list
+        of available commands.
+
+        Example:
+
+        .. code-block:: python
+
+            from hyprpy import Hyprland
+
+            instance = Hyprland()
+            instance.dispatch(["cyclenext", "prev"])
+
+        :param arguments: A list of strings containing the arguments of the dispatch command.
+        :type arguments: list[str]
+        :return: `None` if the command succeeded, otherwise a string indicating errors.
+        :rtype: str or None
+        """
+
+        dispatch_response = self.command_socket.send_command('dispatch', flags=['-j'], args=arguments)
+        dispatch_error = dispatch_response if dispatch_response != 'ok' else None
+        return dispatch_error
+
 
     def get_windows(self) -> List['Window']:
         """Returns all :class:`~hyprpy.components.windows.Window`\\ s currently managed by the instance.
-    
+
         :return: A list containing :class:`~hyprpy.components.windows.Window` objects.
         """
 
@@ -86,7 +111,7 @@ class Instance:
 
     def get_active_window(self) -> 'Window':
         """Returns the currently active :class:`~hyprpy.components.windows.Window`.
-    
+
         :return: The currently active :class:`~hyprpy.components.windows.Window`.
         """
 
@@ -96,7 +121,7 @@ class Instance:
 
     def get_workspaces(self) -> List['Workspace']:
         """Returns all :class:`~hyprpy.components.workspaces.Workspace`\\ s currently managed by the instance.
-    
+
         :return: A list containing :class:`~hyprpy.components.workspaces.Workspace`\\ s.
         """
 
@@ -136,10 +161,10 @@ class Instance:
             if workspace.name == name:
                 return workspace
 
-    
+
     def get_monitors(self) -> List['Monitor']:
         """Returns all :class:`~hyprpy.components.monitors.Monitor`\\ s currently managed by the instance.
-    
+
         :return: A list containing :class:`~hyprpy.components.monitors.Monitor`\\ s.
         """
 
