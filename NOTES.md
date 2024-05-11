@@ -18,4 +18,5 @@ What to do when creating a new release:
 - [ ] push to Github: `git push origin --tags`
 - [ ] add Github release and upload build files
 - [ ] push package to pypi: `twine upload dist/hyprpy-<new-version>*`
+    - if using API: username `__token__` and password `<API-TOKEN>`
 - [ ] rebuild and redeploy docs if necessary
