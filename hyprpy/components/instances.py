@@ -59,13 +59,27 @@ class Instance:
     def __repr__(self):
         return f"<Instance(signature={self.signature!r})>"
 
-        """Runs a dispatcher with the given arguments and returns either `None` on success or a string indicating errors.
+    def dispatch(self, arguments: list[str]) -> Union[str, None]:
+        """Runs a generic dispatcher command with the given arguments and returns ``None`` on success or a string indicating errors.
+
+        See the `Hyprland Wiki <https://wiki.hyprland.org/Configuring/Dispatchers/>`_ for a list
+        of available commands.
+
+        Example:
+
+        .. code-block:: python
+
+            from hyprpy import Hyprland
+
+            instance = Hyprland()
+            instance.dispatch(["cyclenext", "prev"])
 
         :param arguments: A list of strings containing the arguments of the dispatch command.
         :type arguments: list[str]
         :return: `None` if the command succeeded, otherwise a string indicating errors.
         :rtype: str or None
         """
+
         dispatch_response = self.command_socket.send_command('dispatch', flags=['-j'], args=arguments)
         dispatch_error = dispatch_response if dispatch_response != 'ok' else None
         return dispatch_error
