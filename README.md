@@ -75,5 +75,4 @@ Your contributions are greatly appreciated.
 
 ### Roadmap
 
-- [ ] dispatchers for components
-- [ ] ???
+- [ ] include [dispatchers in components API](https://github.com/ulinja/hyprpy/issues/11)
