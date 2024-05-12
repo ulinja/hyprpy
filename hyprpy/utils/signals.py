@@ -46,6 +46,7 @@ class Signal():
     the signal's constructor.
 
     :param sender: The source object sending the signal.
+    :type sender: :class:`object`
 
     Example:
 
@@ -63,7 +64,7 @@ class Signal():
 
     def __init__(self, sender: object):
         self._observers: List[Callable] = []
-        self._sender = sender
+        self._sender: object = sender
 
 
     def connect(self, callback: Callable) -> None:
@@ -73,6 +74,7 @@ class Signal():
         followed by ``**kwargs``.
 
         :param callback: The callback function to be connected to this signal.
+        :type callback: :class:`Callable`
         :raises: :class:`TypeError` if ``callback`` is not callable.
         :raises: :class:`ValueError` if the first positional argument of ``callback`` is not ``sender``.
         :raises: :class:`ValueError` if ``callback`` does not accept keyword arguments.
@@ -99,6 +101,7 @@ class Signal():
         This is useful if you want to limit how often a callback should be executed.
 
         :param callback: The callback function to be disconnected.
+        :type callback: :class:`Callable`
         :raises: :class:`ValueError` if the specified callback is not in the list of observers.
 
         Example:
@@ -125,6 +128,7 @@ class Signal():
         this method.
 
         :param \\**kwargs: Keyword arguments that will be passed to each callback.
+        :type \\**kwargs: :class:`dict[str, any]`
 
         Example:
 

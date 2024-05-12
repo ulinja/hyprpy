@@ -43,18 +43,24 @@ class Instance:
         #: The Hyprland command socket for this instance.
         self.command_socket: CommandSocket = CommandSocket(signature)
 
-        #: Signal emitted when a new workspace gets created. Sends ``created_workspace_id``, the :attr:`~hyprpy.components.workspaces.Workspace.id` of the created workspace, as signal data.
+        #: Signal emitted when a new workspace gets created.
+        #: Sends ``created_workspace_id``, the :attr:`~hyprpy.components.workspaces.Workspace.id` of the created workspace, as signal data.
         self.signal_workspace_created: Signal = Signal(self)
-        #: Signal emitted when an existing workspace gets destroyed. Sends ``destroyed_workspace_id``, the :attr:`~hyprpy.components.workspaces.Workspace.id` of the destroyed workspace, as signal data
+        #: Signal emitted when an existing workspace gets destroyed.
+        #: Sends ``destroyed_workspace_id``, the :attr:`~hyprpy.components.workspaces.Workspace.id` of the destroyed workspace, as signal data
         self.signal_workspace_destroyed: Signal = Signal(self)
-        #: Signal emitted when the focus changes to another workspace. Sends ``active_workspace_id``, the :attr:`~hyprpy.components.workspaces.Workspace.id` of the now active workspace, as signal data.
+        #: Signal emitted when the focus changes to another workspace.
+        #: Sends ``active_workspace_id``, the :attr:`~hyprpy.components.workspaces.Workspace.id` of the now active workspace, as signal data.
         self.signal_active_workspace_changed: Signal = Signal(self)
 
-        #: Signal emitted when a new window gets created. Sends ``created_window_address``, the :attr:`~hyprpy.components.windows.Window.address` of the newly created window, as signal data.
+        #: Signal emitted when a new window gets created.
+        #: Sends ``created_window_address``, the :attr:`~hyprpy.components.windows.Window.address` of the newly created window, as signal data.
         self.signal_window_created: Signal = Signal(self)
-        #: Signal emitted when an existing window gets destroyed. Sends ``destroyed_window_address``, the :attr:`~hyprpy.components.windows.Window.address` of the destroyed window, as signal data.
+        #: Signal emitted when an existing window gets destroyed.
+        #: Sends ``destroyed_window_address``, the :attr:`~hyprpy.components.windows.Window.address` of the destroyed window, as signal data.
         self.signal_window_destroyed: Signal = Signal(self)
-        #: Signal emitted when the focus changes to another window. Sends ``active_window_address``, the :attr:`~hyprpy.components.windows.Window.address` of the now active window, as signal data.
+        #: Signal emitted when the focus changes to another window.
+        #: Sends ``active_window_address``, the :attr:`~hyprpy.components.windows.Window.address` of the now active window, as signal data.
         self.signal_active_window_changed: Signal = Signal(self)
 
 
