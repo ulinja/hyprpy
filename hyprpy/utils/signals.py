@@ -30,8 +30,12 @@ Example:
 """
 
 from typing import Callable, List
+import logging
 
 from hyprpy.utils import assertions
+
+
+log = logging.getLogger(__name__)
 
 
 class Signal():
@@ -136,3 +140,34 @@ class Signal():
 
         for callback in self._observers:
             callback(self._sender, **kwargs)
+
+
+class DeprecatedSignal(Signal):
+    """Behaves just like a normal :class:`~hyprpy.utils.signals.Signal`, but logs deprecation warnings to the console.
+
+    A warning message is printed to the log whenever this Signal's methods are invoked.
+
+    :param sender: The source object sending the signal.
+    :type sender: :class:`object`
+    :param message: The warning message to log when this Signal gets used. This should be an informative deprecation warning.
+    :type message: :class:`str`
+    """
+
+    def __init__(self, sender: object, message: str):
+        super().__init__(sender)
+        self.message = message
+        log.warning(self.message)
+
+
+    def connect(self, callback: Callable) -> None:
+        super().connect(callback)
+        log.warning(self.message)
+
+
+    def disconnect(self, callback: Callable) -> None:
+        super().disconnect(callback)
+        log.warning(self.message)
+
+    def emit(self, **kwargs) -> None:
+        super().emit(**kwargs)
+        log.warning(self.message)
