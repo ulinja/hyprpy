@@ -185,7 +185,7 @@ class EventSocket(AbstractSocket):
         elif os.path.exists( f'{os.environ["XDG_RUNTIME_DIR"]}/hypr' ):
             path = f'{os.environ["XDG_RUNTIME_DIR"]}/hypr'
         else:
-            raise RuntimeError( "Directory `$XDG_RUNTIME_DIR/hypr` doesn't exist, was Hyprland started?." )
+            raise RuntimeError( "Directory `$XDG_RUNTIME_DIR/hypr` doesn't exist, was Hyprland started?" )
 
         self._path_to_socket = PosixPath(f"{path}/{self._signature}/.socket2.sock")
         if not self._path_to_socket.is_socket():
@@ -210,7 +210,7 @@ class CommandSocket(AbstractSocket):
         elif os.path.exists( f'{os.environ["XDG_RUNTIME_DIR"]}/hypr' ):
             path = f'{os.environ["XDG_RUNTIME_DIR"]}/hypr'
         else:
-            raise RuntimeError( "Directory `$XDG_RUNTIME_DIR/hypr` doesn't exist, was Hyprland started?." )
+            raise RuntimeError( "Directory `$XDG_RUNTIME_DIR/hypr` doesn't exist, was Hyprland started?" )
 
         self._path_to_socket = PosixPath(f"{path}/{self._signature}/.socket.sock")
         if not self._path_to_socket.is_socket():
