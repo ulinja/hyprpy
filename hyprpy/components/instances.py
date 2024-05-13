@@ -7,7 +7,6 @@ and offers capabilities to listen to events and signals emitted by the underlyin
 from typing import List, Union
 import json
 import logging
-import os.path
 
 from hyprpy.data.models import InstanceData
 from hyprpy.components.windows import Window
@@ -37,18 +36,10 @@ class Instance:
         #: `Instance signature <https://wiki.hyprland.org/IPC/#hyprland-instance-signature-his>`_ of the Hyprland instance.
         self.signature: str = data.signature
 
-        # find where the runtime directory of Hyprland is located
-        if os.path.exists( f'{os.environ["XDG_RUNTIME_DIR"]}/hypr' ):
-            path = f'{os.environ["XDG_RUNTIME_DIR"]}/hypr'
-        elif os.path.exists( '/tmp/hypr' ):
-            path = '/tmp/hypr'
-        else:
-            raise RuntimeError( 'Failed to find Hyprland runtime directory.' )
-
         #: The Hyprland event socket for this instance.
-        self.event_socket: EventSocket = EventSocket(signature, path)
+        self.event_socket: EventSocket = EventSocket(signature)
         #: The Hyprland command socket for this instance.
-        self.command_socket: CommandSocket = CommandSocket(signature, path)
+        self.command_socket: CommandSocket = CommandSocket(signature)
 
         #: Signal emitted when a new workspace gets created. Sends ``created_workspace_id``, the :attr:`~hyprpy.components.workspaces.Workspace.id` of the created workspace, as signal data.
         self.signal_workspace_created: Signal = Signal(self)

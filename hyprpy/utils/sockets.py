@@ -27,7 +27,7 @@ Examples:
     # Send a command
     instance.command_socket.send_command("dispatch", flags=["--single-instance"], args=["exec", "kitty"])
 """
-
+import os.path
 from abc import ABC
 from typing import List
 from pathlib import PosixPath
@@ -174,9 +174,20 @@ class EventSocket(AbstractSocket):
     windows or workspaces being created or destroyed.
     """
 
-    def __init__(self, signature: str, runtime_dir: str):
+    def __init__(self, signature: str):
         super().__init__(signature)
-        self._path_to_socket = PosixPath(f"{runtime_dir}/{self._signature}/.socket2.sock")
+
+        # find where the runtime directory of Hyprland is located
+        if os.path.exists( '/tmp/hypr' ):
+            path = '/tmp/hypr'
+        elif os.environ.get( 'XDG_RUNTIME_DIR', '' ) == '':
+            raise RuntimeError( 'Environment variable `XDG_RUNTIME_DIR` has not been set.' )
+        elif os.path.exists( f'{os.environ["XDG_RUNTIME_DIR"]}/hypr' ):
+            path = f'{os.environ["XDG_RUNTIME_DIR"]}/hypr'
+        else:
+            raise RuntimeError( "Directory `$XDG_RUNTIME_DIR/hypr` doesn't exist, was Hyprland started?." )
+
+        self._path_to_socket = PosixPath(f"{path}/{self._signature}/.socket2.sock")
         if not self._path_to_socket.is_socket():
             raise FileNotFoundError(f"No socket found at {self._path_to_socket!r}.")
 
@@ -188,9 +199,20 @@ class CommandSocket(AbstractSocket):
     a wide range of commands, as explained in `the Hyprland wiki <https://wiki.hyprland.org/Configuring/Using-hyprctl>`_.
     """
 
-    def __init__(self, signature: str, runtime_dir: str):
+    def __init__(self, signature: str):
         super().__init__(signature)
-        self._path_to_socket = PosixPath(f"{runtime_dir}/{self._signature}/.socket.sock")
+
+        # find where the runtime directory of Hyprland is located
+        if os.path.exists( '/tmp/hypr' ):
+            path = '/tmp/hypr'
+        elif os.environ.get( 'XDG_RUNTIME_DIR', '' ) == '':
+            raise RuntimeError( 'Environment variable `XDG_RUNTIME_DIR` has not been set.' )
+        elif os.path.exists( f'{os.environ["XDG_RUNTIME_DIR"]}/hypr' ):
+            path = f'{os.environ["XDG_RUNTIME_DIR"]}/hypr'
+        else:
+            raise RuntimeError( "Directory `$XDG_RUNTIME_DIR/hypr` doesn't exist, was Hyprland started?." )
+
+        self._path_to_socket = PosixPath(f"{path}/{self._signature}/.socket.sock")
         if not self._path_to_socket.is_socket():
             raise FileNotFoundError(f"No socket found at {self._path_to_socket!r}.")
 
