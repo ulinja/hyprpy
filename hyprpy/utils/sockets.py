@@ -29,10 +29,11 @@ Examples:
 """
 
 from abc import ABC
-from typing import List
+from os import getenv
 from pathlib import PosixPath
-import select, socket
+from typing import List
 import logging
+import select, socket
 
 from hyprpy.utils import assertions
 
@@ -54,7 +55,7 @@ class AbstractSocket(ABC):
     Upon initialization, the underlying :class:`~socket.socket` object is *not* created.
     Users must explicitly call :meth:`~AbstractSocket.connect` prior
     to using the :class:`~socket.socket`, and should call :meth:`~AbstractSocket.close`
-    aftwerwards.
+    afterwards.
     """
 
     def __init__(self, signature: str):
@@ -65,6 +66,37 @@ class AbstractSocket(ABC):
         self._path_to_socket: PosixPath
         #: The underlying :class:`socket.socket` object.
         self._socket: socket.socket | None = None
+
+
+    @staticmethod
+    def _find_socket_base_directory() -> PosixPath:
+        """Finds the filesystem directory where the Hyprland socket files are located.
+
+        On older versions of Hyprland (pre v0.40.0), the base directory for socket files is located
+        at `/tmp/hypr/`, while newer versions place it at `$XDG_RUNTIME_DIR/hypr/`.
+        This method attempts to find the socket base directory for newer versions, falling back to
+        the legacy path, and raising an Error if neither can be located.
+
+        :return: Path to an existing base directory for Hyprland socket files.
+        :raises: :class:`RuntimeError` if the `/tmp/hypr` directory does not exist and `$XDG_RUNTIME_DIR`
+            is undefined.
+        :raises: :class:`FileNotFoundError` if neither `/tmp/hypr` nor `$XDG_RUNTIME_DIR/hypr` exist.
+        """
+
+        runtime_dir = getenv("XDG_RUNTIME_DIR", None)
+        base_dir_legacy = PosixPath("/tmp/hypr")
+        base_dir_newer = PosixPath(runtime_dir) / "hypr" if runtime_dir else None
+
+        if base_dir_newer and base_dir_newer.is_dir():
+            return base_dir_newer
+        if base_dir_legacy.is_dir():
+            return base_dir_legacy
+        if not base_dir_newer:
+            raise RuntimeError(
+                f"Failed to locate Hyprland socket base path: '{base_dir_legacy}' does not exist and " \
+                f"'$XDG_RUNTIME_DIR' is undefined!"
+            )
+        raise FileNotFoundError(f"Failed to locate Hyprland socket base path at '{base_dir_legacy}' or '{base_dir_newer}'.")
 
 
     def connect(self, timeout: int | float | None = 1) -> None:
@@ -139,6 +171,7 @@ class AbstractSocket(ABC):
         if not read_ready:
             raise SocketError(f"Waiting socket timed out after {timeout} seconds.")
 
+
     def read(self) -> str:
         """Immediately retrieves all data from the :class:`~socket.socket` and returns it.
 
@@ -176,7 +209,9 @@ class EventSocket(AbstractSocket):
 
     def __init__(self, signature: str):
         super().__init__(signature)
-        self._path_to_socket = PosixPath(f"/tmp/hypr/{self._signature}/.socket2.sock")
+
+        socket_base_dir = self._find_socket_base_directory()
+        self._path_to_socket = socket_base_dir /self._signature / ".socket2.sock"
         if not self._path_to_socket.is_socket():
             raise FileNotFoundError(f"No socket found at {self._path_to_socket!r}.")
 
@@ -190,7 +225,9 @@ class CommandSocket(AbstractSocket):
 
     def __init__(self, signature: str):
         super().__init__(signature)
-        self._path_to_socket = PosixPath(f"/tmp/hypr/{self._signature}/.socket.sock")
+
+        socket_base_dir = self._find_socket_base_directory()
+        self._path_to_socket = socket_base_dir / self._signature / ".socket.sock"
         if not self._path_to_socket.is_socket():
             raise FileNotFoundError(f"No socket found at {self._path_to_socket!r}.")
 
