@@ -8,13 +8,14 @@ from typing import List, Union
 import json
 import logging
 
-from hyprpy.data.models import InstanceData
+from hyprpy.components.instancesignals import InstanceSignalCollection
+from hyprpy.components.monitors import Monitor
 from hyprpy.components.windows import Window
 from hyprpy.components.workspaces import Workspace
-from hyprpy.components.monitors import Monitor
+from hyprpy.data.models import InstanceData
 from hyprpy.utils import assertions, shell
+from hyprpy.utils.signals import DeprecatedSignal, Signal
 from hyprpy.utils.sockets import CommandSocket, EventSocket
-from hyprpy.utils.signals import Signal
 
 
 log = logging.getLogger(__name__)
@@ -42,26 +43,81 @@ class Instance:
         self.event_socket: EventSocket = EventSocket(signature)
         #: The Hyprland command socket for this instance.
         self.command_socket: CommandSocket = CommandSocket(signature)
+        #: The :class:`~hyprpy.components.instancesignals.InstanceSignalCollection` for this instance.
+        self.signals: InstanceSignalCollection = InstanceSignalCollection()
 
+        #: .. admonition:: |:no_entry_sign:| **Deprecated since v0.2.0**
+        #:
+        #:    This signal has been moved to :attr:`~hyprpy.components.instancesignals.InstanceSignalCollection.createworkspace`
+        #:    and will be removed in future versions of hyprpy.
+        #:
         #: Signal emitted when a new workspace gets created.
         #: Sends ``created_workspace_id``, the :attr:`~hyprpy.components.workspaces.Workspace.id` of the created workspace, as signal data.
-        self.signal_workspace_created: Signal = Signal(self)
+        self.signal_workspace_created: Signal = DeprecatedSignal(
+            self,
+            "Instance.signal_workspace_created",
+            "Instance.signals.createworkspace"
+        )
+        #: .. admonition:: |:no_entry_sign:| **Deprecated since v0.2.0**
+        #:
+        #:    This signal has been moved to :attr:`~hyprpy.components.instancesignals.InstanceSignalCollection.destroyworkspace`
+        #:    and will be removed in future versions of hyprpy.
+        #:
         #: Signal emitted when an existing workspace gets destroyed.
-        #: Sends ``destroyed_workspace_id``, the :attr:`~hyprpy.components.workspaces.Workspace.id` of the destroyed workspace, as signal data
-        self.signal_workspace_destroyed: Signal = Signal(self)
+        #: Sends ``destroyed_workspace_id``, the :attr:`~hyprpy.components.workspaces.Workspace.id` of the destroyed workspace, as signal data.
+        self.signal_workspace_destroyed: Signal = DeprecatedSignal(
+            self,
+            "Instance.signal_workspace_destroyed",
+            "Instance.signals.destroyworkspace"
+        )
+        #: .. admonition:: |:no_entry_sign:| **Deprecated since v0.2.0**
+        #:
+        #:    This signal has been moved to :attr:`~hyprpy.components.instancesignals.InstanceSignalCollection.workspace`
+        #:    and will be removed in future versions of hyprpy.
+        #:
         #: Signal emitted when the focus changes to another workspace.
         #: Sends ``active_workspace_id``, the :attr:`~hyprpy.components.workspaces.Workspace.id` of the now active workspace, as signal data.
-        self.signal_active_workspace_changed: Signal = Signal(self)
-
+        self.signal_active_workspace_changed: Signal = DeprecatedSignal(
+            self,
+            "Instance.signal_active_workspace_changed",
+            "Instance.signals.workspace"
+        )
+        #: .. admonition:: |:no_entry_sign:| **Deprecated since v0.2.0**
+        #:
+        #:    This signal has been moved to :attr:`~hyprpy.components.instancesignals.InstanceSignalCollection.openwindow`
+        #:    and will be removed in future versions of hyprpy.
+        #:
         #: Signal emitted when a new window gets created.
         #: Sends ``created_window_address``, the :attr:`~hyprpy.components.windows.Window.address` of the newly created window, as signal data.
-        self.signal_window_created: Signal = Signal(self)
+        self.signal_window_created: Signal = DeprecatedSignal(
+            self,
+            "Instance.signal_window_created",
+            "Instance.signals.openwindow"
+        )
+        #: .. admonition:: |:no_entry_sign:| **Deprecated since v0.2.0**
+        #:
+        #:    This signal has been moved to :attr:`~hyprpy.components.instancesignals.InstanceSignalCollection.closewindow`
+        #:    and will be removed in future versions of hyprpy.
+        #:
         #: Signal emitted when an existing window gets destroyed.
         #: Sends ``destroyed_window_address``, the :attr:`~hyprpy.components.windows.Window.address` of the destroyed window, as signal data.
-        self.signal_window_destroyed: Signal = Signal(self)
+        self.signal_window_destroyed: Signal = DeprecatedSignal(
+            self,
+            "Instance.signal_window_destroyed",
+            "Instance.signals.closewindow"
+        )
+        #: .. admonition:: |:no_entry_sign:| **Deprecated since v0.2.0**
+        #:
+        #:    This signal has been moved to :attr:`~hyprpy.components.instancesignals.InstanceSignalCollection.activewindow`
+        #:    and will be removed in future versions of hyprpy.
+        #:
         #: Signal emitted when the focus changes to another window.
         #: Sends ``active_window_address``, the :attr:`~hyprpy.components.windows.Window.address` of the now active window, as signal data.
-        self.signal_active_window_changed: Signal = Signal(self)
+        self.signal_active_window_changed: Signal = DeprecatedSignal(
+            self,
+            "Instance.signal_active_window_changed",
+            "Instance.signals.activewindowv2"
+        )
 
 
     def __repr__(self):
@@ -204,7 +260,6 @@ class Instance:
             if monitor.name == name:
                 return monitor
 
-
     def watch(self) -> None:
         """Continuosly monitors the :class:`~hyprpy.utils.sockets.EventSocket` and emits appropriate :class:`~hyprpy.utils.signals.Signal`\\ s when events are detected.
 
@@ -214,44 +269,42 @@ class Instance:
         :seealso: :ref:`Components: Reacting to events <guide-events>`
         """
 
+        _deprecated_signal_for_event = {
+            'openwindow': self.signal_window_created,
+            'closewindow': self.signal_window_destroyed,
+            'activewindowv2': self.signal_active_window_changed,
+
+            'createworkspace': self.signal_workspace_created,
+            'destroyworkspace': self.signal_workspace_destroyed,
+            'workspace': self.signal_active_workspace_changed,
+        }
+
+        def _deprecated_handle_socket_data(event_name: str, event_data: str):
+            signal = _deprecated_signal_for_event[event_name]
+            if not signal._observers:
+                return
+
+            if event_name == 'openwindow':
+                signal.emit(created_window_address=event_data.split(',')[0])
+            elif event_name == 'closewindow':
+                signal.emit(destroyed_window_address=event_data)
+            elif event_name == 'activewindowv2':
+                signal.emit(active_window_address=(None if event_data == ',' else event_data))
+
+            elif event_name == 'createworkspace':
+                signal.emit(created_workspace_id=(int(event_data) if event_data not in ['special', 'special:special'] else -99))
+            elif event_name == 'destroyworkspace':
+                signal.emit(destroyed_workspace_id=(int(event_data) if event_data not in ['special', 'special:special'] else -99))
+            elif event_name == 'workspace':
+                signal.emit(active_workspace_id=(int(event_data) if event_data not in ['special', 'special:special'] else -99))
+
         def _handle_socket_data(data: str):
-            signal_for_event = {
-                'openwindow': self.signal_window_created,
-                'closewindow': self.signal_window_destroyed,
-                'activewindowv2': self.signal_active_window_changed,
-
-                'createworkspace': self.signal_workspace_created,
-                'destroyworkspace': self.signal_workspace_destroyed,
-                'workspace': self.signal_active_workspace_changed,
-            }
-
             lines = list(filter(lambda line: len(line) > 0, data.split('\n')))
             for line in lines:
                 event_name, event_data = line.split('>>', maxsplit=1)
-
-                # Pick the signal to emit based on the event's name
-                if event_name not in signal_for_event:
-                    continue
-                signal = signal_for_event[event_name]
-                if not signal._observers:
-                    # If the signal has no observers, just exit
-                    continue
-
-                # We send specific data along with the signal, depending on the event
-                if event_name == 'openwindow':
-                    signal.emit(created_window_address=event_data.split(',')[0])
-                elif event_name == 'closewindow':
-                    signal.emit(destroyed_window_address=event_data)
-                elif event_name == 'activewindowv2':
-                    signal.emit(active_window_address=(None if event_data == ',' else event_data))
-
-                elif event_name == 'createworkspace':
-                    signal.emit(created_workspace_id=(int(event_data) if event_data not in ['special', 'special:special'] else -99))
-                elif event_name == 'destroyworkspace':
-                    signal.emit(destroyed_workspace_id=(int(event_data) if event_data not in ['special', 'special:special'] else -99))
-                elif event_name == 'workspace':
-                    signal.emit(active_workspace_id=(int(event_data) if event_data not in ['special', 'special:special'] else -99))
-
+                if event_name in _deprecated_signal_for_event:
+                    _deprecated_handle_socket_data(event_name, event_data)
+                self.signals._handle_socket_data(line)
 
         try:
             self.event_socket.connect()

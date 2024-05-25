@@ -41,6 +41,14 @@ Monitor
    :undoc-members:
    :show-inheritance:
 
+Instance Signals
+----------------
+
+.. automodule:: hyprpy.components.instancesignals
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Misc.
 -----
 

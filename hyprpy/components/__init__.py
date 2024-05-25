@@ -40,7 +40,7 @@ Hyprland instance running on our system, we can specify its value manually:
 
     from hyprpy import Hyprland
 
-    instance = Hyprland("v0.25.0_1691941479")
+    instance = Hyprland("882f7ad7d2bbfc7440d0ccaef93b1cdd78e8e3ff_1742068954_542829775")
 
 .. _guide-component-data:
 
@@ -70,10 +70,10 @@ and ``wm_class`` data attributes, which tell us the current width and display cl
 
 Windows, workspaces and monitors have a wide range of useful data attributes.
 For a complete list of data attributes for each type of component, refer to the
-:ref:`Component API <api-components>`.
+:ref:`Components API <api-components>`.
 
 .. note:: Component data attributes are **read-only**.
-    Writing new values into them will not raise an exception, but will also have no effect on Hyprland's actual state.
+    Writing new values into them have no effect on Hyprland's actual state and will lead to unexpected behavior.
 
 Accessing related components
 ----------------------------
@@ -96,7 +96,7 @@ Components provide intuitive access to their parent and/or child components:
 
     print(workspace.monitor.name)
     # Output: 'HDMI-1'
-    
+
 
 For a given :class:`~hyprpy.components.windows.Window`, we can access the :class:`~hyprpy.components.workspaces.Workspace`
 it is on through its :attr:`~hyprpy.components.windows.Window.workspace` property.
@@ -104,9 +104,9 @@ For a workspace, we can access all of its windows through its :attr:`~hyprpy.com
 or the :attr:`~hyprpy.components.workspaces.Workspace.monitor` it is on, and so forth.
 This is similar to object relational mappers (ORMs) you may be familiar with, such as the Django ORM.
 
-.. note:: Accessing related components involves an underlying socket read & write operation.
-    Because Hyprland manages socket operations synchronously, performing many relational
-    lookups in quick succession may impact its performance, leading to lags or, in the worst case, freezing.
+.. note:: Accessing related components involves an IPC socket read & write operation.
+    Because Hyprland manages socket operations synchronously, performing an excessive number of relational
+    lookups in quick succession may impact performance, leading to lags or, in the worst case, freezing.
 
 .. _guide-events:
 
@@ -127,26 +127,26 @@ we can execute python code dynamically, in response to changes in Hyprland's sta
     instance = Hyprland()
 
     # Define a callback function
-    def workspace_changed(sender, **kwargs):
+    def on_workspace_changed(sender, **kwargs):
        run_or_fail(["notify-send", "Workspace Changed"])
 
     # Connect the callback function to the signal
-    instance.signal_active_workspace_changed.connect(workspace_changed)
+    instance.signals.workspace.connect(on_workspace_changed)
 
     # Start watching for hyprland events
     instance.watch()
 
-In this example, we defined our own callback function called ``workspace_changed``.
+In this example, we defined our own callback function called ``on_workspace_changed``.
 The function executes a shell command, ``notify-send``, with ``"Workspace Changed"`` as an argument.
 We used a helper function called :func:`~hyprpy.utils.shell.run_or_fail` here to run the shell command,
-but the body of our callback function can be any valid python code.
+but the body of our callback function can be any valid python code!
 
-Then, we *connected* our callback function to the Instance's :attr:`~hyprpy.components.instances.Instance.signal_active_workspace_changed`
+Then, we *connected* our callback function to the Instance's :attr:`~hyprpy.components.instancesignals.InstanceSignalCollection.workspace`
 signal and, finally, we called the Instance's :meth:`~hyprpy.components.instances.Instance.watch` method.
 
 The :meth:`~hyprpy.components.instances.Instance.watch` method runs indefinitely, but executes our callback
 function whenever the underlying signal is emitted.
-In this case, we get a desktop notification whenever we switch to another workspace.
+In this case, we get a desktop notification whenever we switch to a different workspace.
 
 .. attention:: The callback's function signature **must** be ``(sender, **kwargs)``.
 
@@ -160,54 +160,28 @@ The data can be retrieved from the `**kwargs` in our callback function:
 
     instance = Hyprland()
 
-    def workspace_changed(sender, **kwargs):
+    def on_workspace_changed(sender, **kwargs):
        # Retrieve the newly active workspace from the signal's data
-       active_workspace_id = kwargs.get('active_workspace_id')
-       run_or_fail(["notify-send", "Workspace Changed", f"Workspace is now {active_workspace_id}"])
+       workspace_name = kwargs["workspace_name"]
+       run_or_fail(["notify-send", "Workspace Changed", f"Workspace is now {workspace_name}"])
 
-    instance.signal_active_workspace_changed.connect(workspace_changed)
+    instance.signals.workspace.connect(on_workspace_changed)
     instance.watch()
 
-Building on the previous example, our desktop notification now also includes the ID of the workspace we
+Building on the previous example, our desktop notification now also includes the name of the workspace we
 switched to.
+We pulled this information from the ``**kwargs`` dictionary in our callback function.
+Different signals send different data as kwargs, the details of which are specified in the
+:mod:`~hyprpy.components.instancesignals` module.
 
 We can disconnect signals as well:
 
 .. code-block:: python
 
-    instance.signal_active_workspace_changed.disconnect(workspace_changed)
+    instance.signals.workspace.disconnect(on_workspace_changed)
 
 Aside from saving resources, disconnecting signals is useful if we only want our
 callback to get triggered a few times.
-
-The following table shows a list of available signals, and the data they send to the callback function:
-
-.. list-table:: Instance Signals
-   :widths: 30 40 30
-   :header-rows: 1
-
-   * - Event
-     - Signal
-     - Signal Data
-   * - A workspace was created
-     - :attr:`~hyprpy.components.instances.Instance.signal_workspace_created`
-     - ``created_workspace_id``: the :attr:`~hyprpy.components.workspaces.Workspace.id` of the created workspace
-   * - A workspace was destroyed
-     - :attr:`~hyprpy.components.instances.Instance.signal_workspace_destroyed`
-     - ``destroyed_workspace_id``: the :attr:`~hyprpy.components.workspaces.Workspace.id` of the destroyed workspace
-   * - The active workspace changed
-     - :attr:`~hyprpy.components.instances.Instance.signal_active_workspace_changed`
-     - ``active_workspace_id``: the :attr:`~hyprpy.components.workspaces.Workspace.id` of the now active workspace
-   * - A window was created
-     - :attr:`~hyprpy.components.instances.Instance.signal_window_created`
-     - ``created_window_address``: the :attr:`~hyprpy.components.windows.Window.address` of the newly created window
-   * - A window was destroyed
-     - :attr:`~hyprpy.components.instances.Instance.signal_window_destroyed`
-     - ``destroyed_window_address``: the :attr:`~hyprpy.components.windows.Window.address` of the destroyed window
-   * - The active window changed
-     - :attr:`~hyprpy.components.instances.Instance.signal_active_window_changed`
-     - ``active_window_address``: the :attr:`~hyprpy.components.windows.Window.address` of the now active window
-
 
 .. note:: The :meth:`~hyprpy.components.instances.Instance.watch` method is a blocking operation that runs 
    indefinitely.
