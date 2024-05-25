@@ -62,6 +62,7 @@ class Signal():
         obj = MyClass()
     """
 
+
     def __init__(self, sender: object):
         self._observers: List[Callable] = []
         self._sender: object = sender
@@ -147,31 +148,38 @@ class Signal():
 
 
 class DeprecatedSignal(Signal):
-    """Behaves just like a normal :class:`~hyprpy.utils.signals.Signal`, but logs deprecation warnings to the console.
+    """Behaves just like a normal :class:`~hyprpy.utils.signals.Signal`, but logs a deprecation warning to the console.
 
-    A warning message is printed to the log whenever this Signal's methods are invoked.
+    A warning message is printed to the log when this Signal is connected to a callback.
 
     :param sender: The source object sending the signal.
     :type sender: :class:`object`
-    :param message: The warning message to log when this Signal gets used. This should be an informative deprecation warning.
-    :type message: :class:`str`
+    :param deprecated_signal_name: The name of the deprecated signal.
+    :type deprecated_signal_name: :class:`str`
+    :param replacement_signal_name: The name of the new signal, if applicable, to use in favour of the deprecated one.
+    :type replacement_signal_name: :class:`str`, optional
+
+    Example:
+
+    .. code-block:: python
+
+        signal = DeprecatedSignal("Instance.signal_workspace_created", "Instance.signals.workspace")
     """
 
-    def __init__(self, sender: object, message: str):
+    def __init__(self, sender: object, deprecated_signal_name: str, replacement_signal_name: str | None):
         super().__init__(sender)
-        self.message = message
-        log.warning(self.message)
-
+        self._warning_message = (
+            f"The '{deprecated_signal_name}' Signal is deprecated and will be removed in future versions of hyprpy."
+        )
+        if replacement_signal_name:
+            self._warning_message += f" You should use '{replacement_signal_name}' instead."
 
     def connect(self, callback: Callable) -> None:
         super().connect(callback)
-        log.warning(self.message)
-
+        log.warning(self._warning_message)
 
     def disconnect(self, callback: Callable) -> None:
         super().disconnect(callback)
-        log.warning(self.message)
 
     def emit(self, **kwargs) -> None:
         super().emit(**kwargs)
-        log.warning(self.message)

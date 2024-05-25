@@ -9,7 +9,7 @@
 
 With Hyprpy you can very easily retrieve information about windows, workspaces and monitors
 in a running Hyprland instance.
-It also offers an event monitor, allowing you to write your own callback functions which
+It also offers an event monitor, allowing you to write your own python callback functions which
 execute in response to Hyprland events.
 
 Hyprpy uses unix sockets to communicate with Hyprland, making it **fast** and **efficient**.
@@ -77,12 +77,12 @@ if special_workspace:
 # Show a desktop notification every time we switch to workspace 6
 from hyprpy.utils.shell import run_or_fail
 
-def workspace_changed(sender, **kwargs):
-    current_workspace_id = kwargs.get('active_workspace_id')
-    if current_workspace_id == 6:
+def on_workspace_changed(sender, **kwargs):
+    workspace_id = kwargs.get('workspace_id')
+    if workspace_id == 6:
         run_or_fail(["notify-send", "We are on workspace 6."])
 
-instance.signal_active_workspace_changed.connect(workspace_changed)
+instance.signals.workspacev2.connect(on_workspace_changed)
 instance.watch()
 ```
 

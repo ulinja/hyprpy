@@ -15,6 +15,7 @@ release = '0.1.0'
 add_module_names = False
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinxemoji.sphinxemoji',
 ]
 
 templates_path = ['_templates']
