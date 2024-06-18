@@ -3,6 +3,12 @@
 All notable changes to this hyprpy will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.1.8] - 2024-06-18
+
+### Fixed
+
+- Fixed Instance.watch() crashing when special workspace changes on newer versions of Hyprland
+
 ## [0.1.7] - 2024-05-25
 
 ### Fixed
@@ -77,6 +83,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+[0.1.8]: https://github.com/ulinja/hyprpy/compare/v0.1.7...v0.1.8
 [0.1.7]: https://github.com/ulinja/hyprpy/compare/v0.1.6...v0.1.7
 [0.1.6]: https://github.com/ulinja/hyprpy/compare/v0.1.5...v0.1.6
 [0.1.5]: https://github.com/ulinja/hyprpy/compare/v0.1.4...v0.1.5
