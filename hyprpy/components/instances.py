@@ -238,11 +238,11 @@ class Instance:
                     signal.emit(active_window_address=(None if event_data == ',' else event_data))
 
                 elif event_name == 'createworkspace':
-                    signal.emit(created_workspace_id=(int(event_data) if event_data != 'special' else -99))
+                    signal.emit(created_workspace_id=(int(event_data) if event_data not in ['special', 'special:special'] else -99))
                 elif event_name == 'destroyworkspace':
-                    signal.emit(destroyed_workspace_id=(int(event_data) if event_data != 'special' else -99))
+                    signal.emit(destroyed_workspace_id=(int(event_data) if event_data not in ['special', 'special:special'] else -99))
                 elif event_name == 'workspace':
-                    signal.emit(active_workspace_id=(int(event_data) if event_data != 'special' else -99))
+                    signal.emit(active_workspace_id=(int(event_data) if event_data not in ['special', 'special:special'] else -99))
 
 
         try:
