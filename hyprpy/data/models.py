@@ -56,11 +56,6 @@ class WindowData(BaseModel):
     is_pinned: bool = Field(..., alias="pinned")
     #: Whether or not the window is in fullscreen mode.
     is_fullscreen: bool = Field(..., alias="fullscreen")
-    #: Unknown.
-    fullscreen_mode: int = Field(..., alias="fullscreenMode")
-    #: Unknown.
-    is_fake_fullscreen: bool = Field(..., alias="fakeFullscreen")
-
 
 class WorkspaceData(BaseModel):
     """Deserialization and validation of ``hyprctl`` workspace data."""

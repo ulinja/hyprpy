@@ -44,8 +44,6 @@ Example:
                 "xwayland": false,
                 "pinned": false,
                 "fullscreen": false,
-                "fullscreenMode": 0,
-                "fakeFullscreen": false,
                 "grouped": [],
                 "swallowing": null
             }
