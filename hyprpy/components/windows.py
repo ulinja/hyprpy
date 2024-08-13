@@ -48,7 +48,7 @@ class Window:
         #: Unknown.
         self.is_pinned: bool = data.is_pinned
         #: Whether or not the window is in fullscreen mode.
-        self.is_fullscreen: bool = data.is_fullscreen
+        self.is_fullscreen: int = data.is_fullscreen
 
         #: The :class:`~hyprpy.components.instances.Instance` managing this window.
         self._instance = instance

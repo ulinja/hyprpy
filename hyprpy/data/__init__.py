@@ -43,7 +43,7 @@ Example:
                 "pid": 1782,
                 "xwayland": false,
                 "pinned": false,
-                "fullscreen": false,
+                "fullscreen": 0,
                 "grouped": [],
                 "swallowing": null
             }
@@ -79,8 +79,6 @@ Example:
           "pid": 1782,
           "is_xwayland": false,
           "is_pinned": false,
-          "is_fullscreen": false,
-          "fullscreen_mode": 0,
-          "is_fake_fullscreen": false
+          "is_fullscreen": 0,
         }
 """
