@@ -1,7 +1,13 @@
 # Changelog
 
-All notable changes to this hyprpy will be documented here.
+All notable changes to hyprpy will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+
+## [0.1.9] - 2024-12-12
+
+### Fixed
+
+- Fixed a data parsing error caused by an upstream change to Hyprland wherein the `fullscreenMode` and `fakeFullscreen` attributes were removed from window objects
 
 ## [0.1.8] - 2024-06-18
 
@@ -83,6 +89,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+[0.1.9]: https://github.com/ulinja/hyprpy/compare/v0.1.8...v0.1.9
 [0.1.8]: https://github.com/ulinja/hyprpy/compare/v0.1.7...v0.1.8
 [0.1.7]: https://github.com/ulinja/hyprpy/compare/v0.1.6...v0.1.7
 [0.1.6]: https://github.com/ulinja/hyprpy/compare/v0.1.5...v0.1.6
