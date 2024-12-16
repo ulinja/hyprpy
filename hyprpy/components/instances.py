@@ -30,7 +30,9 @@ class Instance:
     :seealso: :ref:`Components: The Instance <guide-instance>`
     """
 
-    def __init__(self, signature: str = shell.get_env_var_or_fail('HYPRLAND_INSTANCE_SIGNATURE')):
+    def __init__(self, signature: str | None = None):
+        if signature is None:
+            signature = shell.get_env_var_or_fail('HYPRLAND_INSTANCE_SIGNATURE')
         data = InstanceData(signature=signature)
 
         #: `Instance signature <https://wiki.hyprland.org/IPC/#hyprland-instance-signature-his>`_ of the Hyprland instance.
