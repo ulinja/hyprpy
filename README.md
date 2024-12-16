@@ -16,8 +16,22 @@ Hyprpy is fully typed and extensively documented. Happy hacking :sunglasses:
 
 ### Installation
 
+#### Pip
+
+Install Hyprpy with pip by running:
+
 ```bash
 pip install hyprpy
+```
+
+#### Arch Linux
+
+Hyprpy is available in the AUR as [`python-hyprpy`](https://aur.archlinux.org/packages/python-hyprpy).
+
+If you are using an AUR helper like paru simply install it by running:
+
+```bash
+paru -S python-hyprpy
 ```
 
 ### Usage examples

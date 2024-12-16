@@ -15,13 +15,17 @@ you can write python callbacks for Hyprland events.
 Getting started
 ---------------
 
-To get started, install Hyprpy:
+To get started, install Hyprpy using pip:
 
 .. code-block:: bash
 
     pip install hyprpy
 
-and follow along with the :ref:`guide <guide>`, or dive straight into the extensive :ref:`API reference <api>`
+
+On Arch Linux, you can instead install the `python-hyprpy <https://aur.archlinux.org/packages/python-hyprpy>`_
+AUR package.
+
+Once installed, follow along with the :ref:`guide <guide>`, or dive straight into the extensive :ref:`API reference <api>`
 if you're feeling adventurous!
 
 .. toctree::
