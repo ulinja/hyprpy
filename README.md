@@ -1,5 +1,10 @@
 # Hyprpy
 
+[![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff)](#)
+[![GitHub Release](https://img.shields.io/github/v/release/ulinja/hyprpy?logo=GitHub&label=Version&color=green)](https://github.com/ulinja/hyprpy/releases/latest)
+[![PyPI - Version](https://img.shields.io/pypi/v/hyprpy?logo=python&logoColor=white&label=PyPI&color=green)](https://pypi.org/project/hyprpy/)
+[![AUR Version](https://img.shields.io/aur/version/python-hyprpy?logo=Arch%20Linux&label=AUR)](https://aur.archlinux.org/packages/python-hyprpy)
+
 [Hyprpy](https://github.com/ulinja/hyprpy) is a library that provides python bindings for the [Hyprland](https://hyprland.org/) wayland compositor.
 
 With Hyprpy you can very easily retrieve information about windows, workspaces and monitors
