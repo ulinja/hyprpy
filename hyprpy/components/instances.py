@@ -56,6 +56,8 @@ class Instance:
         self.signal_window_destroyed: Signal = Signal(self)
         #: Signal emitted when the focus changes to another window. Sends ``active_window_address``, the :attr:`~hyprpy.components.windows.Window.address` of the now active window, as signal data.
         self.signal_active_window_changed: Signal = Signal(self)
+        #: Signal emitted when the config is done reloading. No reply.
+        self.signal_configuration_reloaded: Signal = Signal(self)
 
 
     def __repr__(self):
@@ -217,6 +219,7 @@ class Instance:
                 'createworkspace': self.signal_workspace_created,
                 'destroyworkspace': self.signal_workspace_destroyed,
                 'workspace': self.signal_active_workspace_changed,
+                'configreloaded': self.signal_configuration_reloaded,
             }
 
             lines = list(filter(lambda line: len(line) > 0, data.split('\n')))
@@ -245,6 +248,8 @@ class Instance:
                     signal.emit(destroyed_workspace_id=(int(event_data) if event_data not in ['special', 'special:special'] else -99))
                 elif event_name == 'workspace':
                     signal.emit(active_workspace_id=(int(event_data) if event_data not in ['special', 'special:special'] else -99))
+                elif event_name == 'configreloaded':
+                    signal.emit()
 
 
         try:
