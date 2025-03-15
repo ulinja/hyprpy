@@ -8,11 +8,10 @@ On NixOS, an attempt to create a venv locally and running `pip install -r requir
 some of the pulled in pip wheels will attempt to compile the `cffi` package.
 This requires the `libcffi` C library to be linked during the build, causing pip to fail on NixOS.
 
-To fix this, use the provided `shell.nix`, which will pull in the required library and make it available in the
-created venv. You have to delete your existing `.venv` folder if it is present:
+To fix this, use the provided `shell.nix`, which will pull in the required dependencies from nixpkgs rather
+than installing them using pip and `requirements.txt`:
 
 ```bash
-rm -rf .venv
 nix-shell
 ```
 
