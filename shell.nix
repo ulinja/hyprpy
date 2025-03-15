@@ -1,25 +1,21 @@
 with import <nixpkgs> {};
-let
-  pythonPackages = python3Packages;
-in pkgs.mkShell rec {
-  name = "impurePythonEnv";
-  venvDir = "./.venv";
-  buildInputs = [
-    pythonPackages.python
-    pythonPackages.venvShellHook
-
-    # Add pip build-time dependencies
-    libffi
+pkgs.mkShell {
+  packages = with pkgs; [
+    (python3.withPackages(p: with p; [
+      pydantic
+      sphinx
+      sphinxemoji
+      (
+        buildPythonPackage rec {
+          pname = "sphinx_press_theme";
+          version = "0.9.1";
+          src = fetchPypi {
+            inherit pname version;
+            sha256 = "sha256-FkPe5zZfeDHR05cbOJt8JVZBp6ztdfBoH3FXTjgARs8=";
+          };
+          doCheck = false;
+        }
+      )
+    ]))
   ];
-
-  # Auto-run pip install if .venv does not exist
-  postVenvCreation = ''
-    unset SOURCE_DATE_EPOCH
-    pip install -r requirements.txt
-  '';
-
-  postShellHook = ''
-    # allow pip to install wheels
-    unset SOURCE_DATE_EPOCH
-  '';
 }
