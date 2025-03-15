@@ -3,6 +3,30 @@
 All notable changes to hyprpy will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.2.0] - 2025-03-16
+
+### Added
+
+- The `InstanceSignalCollection` class, accessible via `Instance.signals`, which contains
+  hyprpy signals for all Hyprland IPC events
+
+### Deprecated
+
+- The following `Instance` signals (which have been renamed and should from now on be accessed
+  in `Instance.signals` instead):
+  -`Instance.signal_window_created`
+  -`Instance.signal_window_destroyed`
+  -`Instance.signal_active_window_changed`
+  -`Instance.signal_workspace_created`
+  -`Instance.signal_workspace_destroyed`
+  -`Instance.signal_active_workspace_changed`
+
+### Fixed
+
+- Increased the socket timeout grace period in `CommandSocket.send_command` which
+  previously led to premature timeouts when connecting/disconnecting monitors and
+  calling `Instance.get_monitors()` immediately
+
 ## [0.1.10] - 2024-12-17
 
 ### Fixed
@@ -95,6 +119,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+[0.2.0]: https://github.com/ulinja/hyprpy/compare/v0.1.10...v0.2.0
 [0.1.10]: https://github.com/ulinja/hyprpy/compare/v0.1.9...v0.1.10
 [0.1.9]: https://github.com/ulinja/hyprpy/compare/v0.1.8...v0.1.9
 [0.1.8]: https://github.com/ulinja/hyprpy/compare/v0.1.7...v0.1.8
