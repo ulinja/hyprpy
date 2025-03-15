@@ -270,7 +270,7 @@ class CommandSocket(AbstractSocket):
 
         self.connect()
         self.send(message)
-        self.wait(0.5)
+        self.wait(5)
         response = self.read()
         self.close()
         return response
