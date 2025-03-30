@@ -807,7 +807,7 @@ class InstanceSignalCollection:
         }
 
     def _parse_workspacev2(self, data: str) -> dict:
-        workspace_name, workspace_id = data.rsplit(",", maxsplit=1)
+        workspace_id, workspace_name = data.rsplit(",", maxsplit=1)
         return {
             "workspace_name": workspace_name,
             "workspace_id": int(workspace_id),
