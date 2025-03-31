@@ -713,11 +713,11 @@ class InstanceSignalCollection:
 
     def _parse_movewindowv2(self, data: str) -> dict:
         window_address, _other = data.split(",", maxsplit=1)
-        workspace_name, workspace_id = _other.rsplit(",", maxsplit=1)
+        workspace_id, workspace_name = _other.rsplit(",", maxsplit=1)
         return {
             "window_address": window_address,
-            "workspace_name": workspace_name,
             "workspace_id": int(workspace_id),
+            "workspace_name": workspace_name,
         }
 
     def _parse_moveworkspace(self, data: str) -> dict:
