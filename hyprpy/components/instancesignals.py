@@ -249,6 +249,20 @@ class InstanceSignalCollection:
         #:       ======================= ============= =============================================================================
         self.lockgroups: Signal = Signal(self)
 
+        #: Emits the following Signal Data when an external app requests a window to be minimized:
+        #:
+        #:    .. table::
+        #:       :widths: auto
+        #:       :align: left
+        #:
+        #:       ================== ============= ===================================================================
+        #:       Name               Type          Description
+        #:       ================== ============= ===================================================================
+        #:       ``window_address`` :class:`str`  :attr:`~hyprpy.components.windows.Window.address` of the window
+        #:       ``is_minimized``   :class:`bool` ``True`` if the window should be minimized, and ``False`` otherwise
+        #:       ================== ============= ===================================================================
+        self.minimized: Signal = Signal(self)
+
         #: Emits the following Signal Data when a monitor is added:
         #:
         #:    .. table::
@@ -674,6 +688,13 @@ class InstanceSignalCollection:
     def _parse_lockgroups(self, data: str) -> dict:
         return {
             "lock_groups_enabled": bool(int(data)),
+        }
+
+    def _parse_minimized(self, data: str) -> dict:
+        window_address, is_minimized = data.split(",")
+        return {
+            "window_address": window_address,
+            "is_minimized": bool(int(is_minimized)),
         }
 
     def _parse_monitoradded(self, data: str) -> dict:
