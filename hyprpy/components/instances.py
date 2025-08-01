@@ -213,7 +213,7 @@ class Instance:
         workspace_data = json.loads(self.command_socket.send_command('activeworkspace', flags=['-j']))
         return Workspace(workspace_data, self)
 
-    def get_workspace_by_name(self, name: int) -> Union['Workspace', None]:
+    def get_workspace_by_name(self, name: str) -> Union['Workspace', None]:
         """Retrieves the :class:`~hyprpy.components.workspaces.Workspace` with the specified ``name``.
 
         :return: The :class:`~hyprpy.components.workspaces.Workspace` if it exists, or ``None`` otherwise.
