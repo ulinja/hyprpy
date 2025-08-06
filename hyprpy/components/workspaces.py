@@ -19,6 +19,8 @@ class Workspace:
         self.name: str = data.name
         #: Name of the monitor which this workspace is on.
         self.monitor_name: str = data.monitor_name
+        #: ID of the monitor which this workspace is on.
+        self.monitor_id: int = data.monitor_id
         #: Address string of the most recently active window on the workspace.
         self.last_window_address: str = data.last_window_address
         #: Title of the most recently active window on the workspace.

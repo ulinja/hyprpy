@@ -56,6 +56,22 @@ class WindowData(BaseModel):
     is_pinned: bool = Field(..., alias="pinned")
     #: Whether or not the window is in fullscreen mode.
     is_fullscreen: int = Field(..., alias="fullscreen")
+    #: Whether or not the window is grouped.
+    grouped: list = Field(...)
+    #: Tags of the window.
+    tags: list = Field(...)
+    #: Address of the parent window being swallowed by this window, or ``0x0``
+    #: if this window isn't swallowing any other window.
+    swallows: HexString | None = Field(..., alias="swallowing")
+    #: Unknown.
+    focus_history_id: int = Field(..., alias="focusHistoryID")
+    #: Unknown.
+    inhibiting_idle: bool = Field(..., alias="inhibitingIdle")
+    #: Unknown.
+    xdg_tag: str = Field(..., alias="xdgTag")
+    #: Unknown.
+    xdg_description: str = Field(..., alias="xdgDescription")
+
 
 class WorkspaceData(BaseModel):
     """Deserialization and validation of ``hyprctl`` workspace data."""
@@ -66,6 +82,8 @@ class WorkspaceData(BaseModel):
     name: str
     #: Name of the monitor which this workspace is on.
     monitor_name: str = Field(..., alias="monitor")
+    #: ID of the monitor which this workspace is on.
+    monitor_id: int = Field(..., alias="monitorID")
     #: Address string of the most recently active window on the workspace.
     last_window_address: HexString = Field(..., alias="lastwindow")
     #: Title of the most recently active window on the workspace.
@@ -117,6 +135,10 @@ class MonitorData(BaseModel):
     uses_dpms: bool = Field(..., alias="dpmsStatus")
     #: Unknown.
     vrr: bool
+    #: Whether or not the monitor is currently disabled.
+    is_disabled: bool = Field(..., alias="disabled")
+    #: Unknown.
+    mirror_of: str = Field(..., alias="mirrorOf")
 
 
 class InstanceData(BaseModel):

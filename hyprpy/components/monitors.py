@@ -3,7 +3,7 @@
 from typing import List
 
 from hyprpy.data.models import MonitorData
-from hyprpy.components import instances, workspaces
+from hyprpy.components import instances
 
 class Monitor:
     """Represents a monitor within Hyprland."""
@@ -49,6 +49,10 @@ class Monitor:
         self.uses_dpms: bool = data.uses_dpms
         #: Unknown.
         self.vrr: bool = data.vrr
+        #: Whether or not the monitor is currently disabled.
+        self.is_disabled: bool = data.is_disabled
+        #: Unknown.
+        self.mirror_of: str | None = None if data.mirror_of == "none" else data.mirror
 
         #: The :class:`~hyprpy.components.instances.Instance` managing this monitor.
         self._instance = instance
