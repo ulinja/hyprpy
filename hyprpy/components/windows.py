@@ -49,6 +49,20 @@ class Window:
         self.is_pinned: bool = data.is_pinned
         #: Whether or not the window is in fullscreen mode.
         self.is_fullscreen: int = data.is_fullscreen
+        #: Whether or not the window belongs to a group
+        self.grouped: list = data.grouped
+        #: Tags of the window.
+        self.tags: list = data.tags
+        #: Whether or not the window is swallowed.
+        self.is_swallowing: str = data.is_swallowing
+        #: Unknown.
+        self.focus_history_id: int = data.focus_history_id
+        #: Unknown.
+        self.inhibiting_idle: bool = data.inhibiting_idle
+        #: Unknown.
+        self.xdg_tag: str = data.xdg_tag
+        #: Unknown.
+        self.xdg_description: str = data.xdg_description
 
         #: The :class:`~hyprpy.components.instances.Instance` managing this window.
         self._instance = instance

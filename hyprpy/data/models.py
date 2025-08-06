@@ -56,6 +56,21 @@ class WindowData(BaseModel):
     is_pinned: bool = Field(..., alias="pinned")
     #: Whether or not the window is in fullscreen mode.
     is_fullscreen: int = Field(..., alias="fullscreen")
+    #: Whether or not the window is grouped.
+    grouped: list = Field(...)
+    #: Tags of the window.
+    tags: list = Field(...)
+    #: Whether or not the window is swallowed.
+    is_swallowing: str = Field(..., alias="swallowing")
+    #: Unknown.
+    focus_history_id: int = Field(..., alias="focusHistoryID")
+    #: Unknown.
+    inhibiting_idle: bool = Field(..., alias="inhibitingIdle")
+    #: Unknown.
+    xdg_tag: str = Field(..., alias="xdgTag")
+    #: Unknown.
+    xdg_description: str = Field(..., alias="xdgDescription")
+
 
 class WorkspaceData(BaseModel):
     """Deserialization and validation of ``hyprctl`` workspace data."""
