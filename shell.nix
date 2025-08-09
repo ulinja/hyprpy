@@ -14,7 +14,10 @@ pkgs.mkShell {
             inherit pname version;
             sha256 = "sha256-FkPe5zZfeDHR05cbOJt8JVZBp6ztdfBoH3FXTjgARs8=";
           };
+          pyproject = true;
+          build-system = [ setuptools ];
           doCheck = false;
+          dependencies = [ sphinx ];
         }
       )
       twine
