@@ -3,6 +3,31 @@
 All notable changes to hyprpy will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.2.1] - 2026-01-24
+
+### Added
+
+- Added a collection of newer Hyprland component attributes to Hyprpy components:
+  - `Window` attributes:
+    - `grouped`
+    - `tags`
+    - `swallows`
+    - `focus_history_id`
+    - `inhibiting_idle`
+    - `xdg_tag`
+    - `xdg_description`
+  - `Monitor` attributes:
+    - `is_disabled`
+    - `mirror_of`
+  - `Workspace` attributes:
+    - `monitor_id`
+- Added the `minimized` signal
+
+### Fixed
+
+- Fixed invalid argument ordering in the `workspacev2` signal leading to `ValueError` when listening for the event
+- Fixed invalid method signature typing in `Instance.get_workspace_by_name`
+
 ## [0.2.0] - 2025-03-16
 
 ### Added
@@ -119,6 +144,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+[0.2.1]: https://github.com/ulinja/hyprpy/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/ulinja/hyprpy/compare/v0.1.10...v0.2.0
 [0.1.10]: https://github.com/ulinja/hyprpy/compare/v0.1.9...v0.1.10
 [0.1.9]: https://github.com/ulinja/hyprpy/compare/v0.1.8...v0.1.9
