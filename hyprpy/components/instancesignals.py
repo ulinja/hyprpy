@@ -458,6 +458,21 @@ class InstanceSignalCollection:
         #:       ``screencast_type``    :class:`str`  ``"MONITOR"`` if the screencast was enabled for a monitor, and ``"WINDOW"`` if it was enabled for a window
         #:       ====================== ============= ==========================================================================================================
         self.screencast: Signal = Signal(self)
+        
+        #: Emits the following Signal Data when the screencopy state of a client changes:
+        #:
+        #:    .. table::
+        #:       :widths: auto
+        #:       :align: left
+        #:
+        #:       ====================== ============= ================================================================================================================================================================
+        #:       Name                   Type          Description
+        #:       ====================== ============= ================================================================================================================================================================
+        #:       ``screencast_enabled`` :class:`bool` ``True`` if the screencast was enabled, and ``False`` if it was disabled
+        #:       ``screencast_type``    :class:`str`  ``"MONITOR"`` if the screencast was enabled for a monitor, and ``"WINDOW"`` if it was enabled for a window, "REGION" if it was enabled for a region, or "NONE"
+        #        ``screencast_name``    :class:`str`  Name of the monitor if screencast was enabled for a monitor or name of window if it was enabled for a window
+        #:       ====================== ============= ================================================================================================================================================================
+        self.screencastv2: Signal = Signal(self)
 
         #: Emits the following Signal Data when a keybind submap changes:
         #:
@@ -791,6 +806,24 @@ class InstanceSignalCollection:
         return {
             "screencast_enabled": bool(int(screencast_enabled)),
             "screencast_type": screencast_type,
+        }
+
+    def _parse_screencastv2(self, data: str) -> dict:
+        print(data)
+        screencast_enabled, _screencast_type_internal, screencast_name = data.split(",")
+        match _screencast_type_internal:
+            case "monitor":
+                screencast_type = "MONITOR"
+            case "window":
+                screencast_type = "WINDOW"
+            case "region":
+                screencast_type = "REGION"
+            case _:
+                screencast_type = "NONE"
+        return {
+            "screencast_enabled": bool(int(screencast_enabled)),
+            "screencast_type": screencast_type,
+            "screencast_name": screencast_name,
         }
 
     def _parse_submap(self, data: str) -> dict:
